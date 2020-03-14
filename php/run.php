@@ -37,13 +37,12 @@ function store_tweet_in_db($tid, $nick, $text) {
         ->push([
             'id'      => $tid,
             'nick'    => $nick,
-            'message' => $text
+            'message' => $text,
+            'tags'    => implode(',', get_tags_from_text($text))
         ]);
 }
 
 function show_db($config) {
-    $locations = [];
-
     foreach(get_all_tweets_in_db() as $some_id => $tweet) {
         $nick = $tweet['nick'];
         $status = $tweet['message'];
@@ -53,9 +52,6 @@ function show_db($config) {
         foreach ($matches[0] as $match) {
             if (!in_array($match, $hashtags)) {
                 $hashtags []= $match;
-                if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
-                    $locations []= $match;
-                }
             }
         }
 
@@ -74,11 +70,6 @@ function show_db($config) {
 
         $tid = $tweet['id'];
         echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-    }
-
-    echo "\n\nLOCATIONS:\n";
-    foreach ($locations as $location) {
-        echo "    > $location\n";
     }
 }
 
@@ -117,6 +108,21 @@ function collect_tweets($config) {
     collect_tweets_before_first($config);
 }
 
+function get_tags_from_text($text) {
+    preg_match_all("/#(\\w+)/", $text, $matches);
+    $hashtags = [];
+    $locations = [];
+    foreach ($matches[0] as $match) {
+        if (!in_array($match, $hashtags)) {
+            $hashtags []= $match;
+            if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
+                $locations []= substr($match, 1);
+            }
+        }
+    }
+    return $locations;
+}
+
 function collect_tweets_after_last($config) {
     $url = 'https://api.twitter.com/1.1/search/tweets.json';
     $last = get_boundaries()["last"];
@@ -145,6 +151,7 @@ function collect_tweets_after_last($config) {
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
         $status = $tweet->full_text;
+
         if (isInterestingTweet($status)) {
             $coloured_status = preg_replace(
                 "/(AyudaAlimentosCoronavirus)/i",
