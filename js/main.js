@@ -8,16 +8,28 @@ var fill_table_with_all_tweets = function(tweets) {
     for (id in tweets) {
         var tweet = tweets[id];
         var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
-        var tags = '...';
+        var tags = tweet.tags != undefined ? tweet.tags.split(',') : [];
+        var tags_filter_class = 'filter-by-tag-' + id;
+        var tags_cell = '';
+        for (var i in tags) {
+            var tag = tags[i];
+            tags_cell += '<a href="#" class="' + tags_filter_class + '" data-tag="' + tag + '">#' + tag + '</a><br/>';
+        }
         $('#tweets').prepend(
             '<tr> <th scope="row">'
-                + tags
+                + tags_cell
                 + '</th> <td>'
                 + tweet.message
                 + '</td> <td> <a target="_blank" href="'
                 + link
                 + '"> Ver tweet </a> </td> </tr>'
         );
+        $('a.' + tags_filter_class).on("click", function(e) {
+            e.preventDefault();
+            var value = $(this).data('tag');
+            $('#filterTags').val(value);
+            filter_table_by_tag(value);
+        });
     }
 };
 
@@ -35,12 +47,16 @@ var init_firebase = function() {
     firebase.initializeApp(firebaseConfig);
 };
 
+var filter_table_by_tag = function(tag) {
+    $("#tweetsTable tr").filter(function() {
+        $(this).toggle($(this).find('th').text().toLowerCase().indexOf(tag.toLowerCase()) > -1)
+    });
+};
+
 var init_table_filter = function() {
     $("#filterTags").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#tweetsTable tr").filter(function() {
-            $(this).toggle($(this).find('th').text().toLowerCase().indexOf(value) > -1)
-        });
+        filter_table_by_tag(value);
     });
 };
 
