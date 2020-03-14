@@ -8,7 +8,7 @@ var fill_table_with_all_tweets = function(tweets) {
     for (id in tweets) {
         var tweet = tweets[id];
         var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
-        var tags = tweet.tags != undefined ? tweet.tags.split(',') : [];
+        var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
         var tags_filter_class = 'filter-by-tag-' + id;
         var tags_cell = '';
         for (var i in tags) {

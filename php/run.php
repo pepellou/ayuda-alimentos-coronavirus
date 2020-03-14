@@ -104,8 +104,15 @@ function show_last_tweets($config) {
 }
 
 function collect_tweets($config) {
-    collect_tweets_after_last($config);
-    collect_tweets_before_first($config);
+    $after = collect_tweets_after_last($config);
+    $before = collect_tweets_before_first($config);
+    $total = $after + $before;
+
+    if ($total == 0) {
+        echo "\n   No new tweets collected\n";
+    } else {
+        echo "\n   Tweets collected: $total\n";
+    }
 }
 
 function get_tags_from_text($text) {
@@ -148,6 +155,8 @@ function collect_tweets_after_last($config) {
         return;
     }
 
+    $stored = 0;
+
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
         $status = $tweet->full_text;
@@ -161,12 +170,15 @@ function collect_tweets_after_last($config) {
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
             store_tweet_in_db($tid, $nick, $status);
+            $stored++;
         }
     }
 
     $new_last = $tweets[0]->id_str;
     echo "    LAST updated from $last to $new_last\n";
     store_boundary_last($new_last);
+
+    return $stored;
 }
 
 function collect_tweets_before_first($config) {
@@ -198,6 +210,8 @@ function collect_tweets_before_first($config) {
         array_shift($tweets);
     }
 
+    $stored = 0;
+
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
         $status = $tweet->full_text;
@@ -210,12 +224,15 @@ function collect_tweets_before_first($config) {
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
             store_tweet_in_db($tid, $nick, $status);
+            $stored++;
         }
     }
 
     $new_first = $tweets[count($tweets) - 1]->id_str;
     echo "    FIRST updated from $first to $new_first\n";
     store_boundary_first($new_first);
+
+    return $stored;
 }
 
 function isInterestingTweet($text) {
