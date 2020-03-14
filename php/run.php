@@ -42,12 +42,26 @@ function store_tweet_in_db($tid, $nick, $text) {
 }
 
 function show_db($config) {
-    print_r(get_all_tweets_in_db());
+    foreach(get_all_tweets_in_db() as $some_id => $tweet) {
+        $nick = $tweet['nick'];
+        $status = $tweet['message'];
+        $coloured_status = preg_replace(
+            "/(AyudaAlimentosCoronavirus)/i",
+            "\033[01;31m".'${1}'."\033[0m",
+            $status
+        );
+        $tid = $tweet['id'];
+        echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
+
+        preg_match("/#(\\w+)/", $status, $matches);
+        print_r( $matches);
+
+    }
 }
 
 function show_last_tweets($config) {
     $url = 'https://api.twitter.com/1.1/search/tweets.json';
-    $getfield = '?q=%23ayudaalimentoscoronavirus&count=100';
+    $getfield = '?q=%23ayudaalimentoscoronavirus&count=100&tweet_mode=extended';
     $requestMethod = 'GET';
 
     $twitter = new TwitterAPIExchange(array(
@@ -62,8 +76,8 @@ function show_last_tweets($config) {
 
     foreach($results->statuses as $tweet) {
         $nick = $tweet->user->screen_name;
-        $status = $tweet->text;
-        if (true || isInterestingTweet($status)) {
+        $status = $tweet->full_text;
+        if (isInterestingTweet($status)) {
             $coloured_status = preg_replace(
                 "/(AyudaAlimentosCoronavirus)/i",
                 "\033[01;31m".'${1}'."\033[0m",
@@ -85,6 +99,7 @@ function collect_tweets_after_last($config) {
     $last = get_boundaries()["last"];
     $getfield = '?q="%23AyudaAlimentosCoronavirus"'
         .'&count=100'
+        .'&tweet_mode=extended'
         .'&since_id='.$last
     ;
     $requestMethod = 'GET';
@@ -106,7 +121,7 @@ function collect_tweets_after_last($config) {
 
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
-        $status = $tweet->text;
+        $status = $tweet->full_text;
         if (isInterestingTweet($status)) {
             $coloured_status = preg_replace(
                 "/(AyudaAlimentosCoronavirus)/i",
@@ -129,6 +144,7 @@ function collect_tweets_before_first($config) {
     $first = get_boundaries()["first"];
     $getfield = '?q="%23AyudaAlimentosCoronavirus"'
         .'&count=100'
+        .'&tweet_mode=extended'
         .'&max_id='.$first
     ;
     $requestMethod = 'GET';
@@ -148,9 +164,13 @@ function collect_tweets_before_first($config) {
         return;
     }
 
+    if ($tweets[0]->id_str == $first) {
+        array_shift($tweets);
+    }
+
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
-        $status = $tweet->text;
+        $status = $tweet->full_text;
         if (isInterestingTweet($status)) {
             $coloured_status = preg_replace(
                 "/(AyudaAlimentosCoronavirus)/i",
@@ -163,7 +183,7 @@ function collect_tweets_before_first($config) {
         }
     }
 
-    $new_first = $tweets[count($tweets) - 2]->id_str;
+    $new_first = $tweets[count($tweets) - 1]->id_str;
     echo "    FIRST updated from $first to $new_first\n";
     store_boundary_first($new_first);
 }
