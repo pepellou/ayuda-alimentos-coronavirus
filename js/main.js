@@ -1,6 +1,8 @@
 $(function() {
-    // Initialize Firebase
-    var config = {
+    console.log('a');
+
+  // Your web app's Firebase configuration
+    var firebaseConfig = {
         apiKey: "AIzaSyCNCfCoMnJMx7ncX6An3zCQc4TWsK60300",
         authDomain: "ayuda-alimentos-coronavirus.firebaseapp.com",
         databaseURL: "https://ayuda-alimentos-coronavirus.firebaseio.com",
@@ -9,11 +11,17 @@ $(function() {
         messagingSenderId: "622677547690",
         appId: "1:622677547690:web:0a04757a7c6ab63dacced3"
     };
-    firebase.initializeApp(config);
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    console.log('merda');
 
     var database = firebase.database();
+    console.log(database);
 
     database.ref('tweets').on('value', function(snapshot) {
+    console.log('fork yeah');
         var tweets = snapshot.val();
         var count = 0;
         for (id in tweets) {
@@ -35,7 +43,7 @@ $(function() {
                 '</a>'
             );
         */
-            console.log('[@' + nick + '] ' + message);
+            console.log('[@' + nick + '] ' + text);
             console.log('    ' + link);
             console.log('');
         }
