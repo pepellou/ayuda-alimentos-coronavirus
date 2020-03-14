@@ -1,5 +1,4 @@
 $(function() {
-    console.log('a');
 
   // Your web app's Firebase configuration
     var firebaseConfig = {
@@ -15,37 +14,29 @@ $(function() {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
-    console.log('merda');
-
     var database = firebase.database();
-    console.log(database);
 
     database.ref('tweets').on('value', function(snapshot) {
-    console.log('fork yeah');
         var tweets = snapshot.val();
         var count = 0;
         for (id in tweets) {
             count++;
         }
-        /*
         $('span#count').text(count);
-        $('#graves').html('');
-        */
+        $('#tweets').html('');
         for (id in tweets) {
             var tweet = tweets[id];
             var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
-            var nick = tweet.nick;
-            var text = tweet.message;
-        /*
-            $('#graves').prepend(
-                '<a class="grave" target="_blank" href="https://twitter.com/' + tweet.nick + '/status/' + tweet.id + '">' +
-                    '<div class="nickname">@' + tweet.nick + '</div>' +
-                '</a>'
+            var tags = '...';
+            $('#tweets').prepend(
+                '<tr> <th scope="row">'
+                    + tags
+                    + '</th> <td>'
+                    + tweet.message
+                    + '</td> <td> <a target="_blank" href="'
+                    + link
+                    + '"> Ver tweet </a> </td> </tr>'
             );
-        */
-            console.log('[@' + nick + '] ' + text);
-            console.log('    ' + link);
-            console.log('');
         }
     });
 });

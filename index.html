@@ -20,11 +20,25 @@
             <a href="https://twitter.com/search?q=%23AyudaAlimentosCoronavirus" target="_blank">
                 #AyudaAlimentosCoronavirus
             </a> y mostramos aquí el resto de hashtags.
+            <br/>
+            (recopilados <span id="count">0</span> tweets por el momento)
         </p>
         <p>
             Busca en esta lista tu ciudad o barrio, o los cercanos, para encontrar gente
             que necesita tu ayuda o que te puede ayudar.
         </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Dónde</th>
+                    <th scope="col">Mensaje</th>
+                    <th scope="col">Tweet</th>
+                </tr>
+            </thead>
+            <tbody id="tweets">
+            </tbody>
+        </table>
 
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
