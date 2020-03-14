@@ -42,20 +42,43 @@ function store_tweet_in_db($tid, $nick, $text) {
 }
 
 function show_db($config) {
+    $locations = [];
+
     foreach(get_all_tweets_in_db() as $some_id => $tweet) {
         $nick = $tweet['nick'];
         $status = $tweet['message'];
+
+        preg_match_all("/#(\\w+)/", $status, $matches);
+        $hashtags = [];
+        foreach ($matches[0] as $match) {
+            if (!in_array($match, $hashtags)) {
+                $hashtags []= $match;
+                if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
+                    $locations []= $match;
+                }
+            }
+        }
+
         $coloured_status = preg_replace(
-            "/(AyudaAlimentosCoronavirus)/i",
+            "/(#AyudaAlimentosCoronavirus)/i",
             "\033[01;31m".'${1}'."\033[0m",
             $status
         );
+        foreach ($hashtags as $hashtag) {
+            $coloured_status = preg_replace(
+                "/(".$hashtag.")/i",
+                "\033[01;31m".'${1}'."\033[0m",
+                $coloured_status
+            );
+        }
+
         $tid = $tweet['id'];
         echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
+    }
 
-        preg_match("/#(\\w+)/", $status, $matches);
-        print_r( $matches);
-
+    echo "\n\nLOCATIONS:\n";
+    foreach ($locations as $location) {
+        echo "    > $location\n";
     }
 }
 
