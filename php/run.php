@@ -37,13 +37,12 @@ function store_tweet_in_db($tid, $nick, $text) {
         ->push([
             'id'      => $tid,
             'nick'    => $nick,
-            'message' => $text
+            'message' => $text,
+            'tags'    => implode(',', get_tags_from_text($text))
         ]);
 }
 
 function show_db($config) {
-    $locations = [];
-
     foreach(get_all_tweets_in_db() as $some_id => $tweet) {
         $nick = $tweet['nick'];
         $status = $tweet['message'];
@@ -53,9 +52,6 @@ function show_db($config) {
         foreach ($matches[0] as $match) {
             if (!in_array($match, $hashtags)) {
                 $hashtags []= $match;
-                if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
-                    $locations []= $match;
-                }
             }
         }
 
@@ -74,11 +70,6 @@ function show_db($config) {
 
         $tid = $tweet['id'];
         echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-    }
-
-    echo "\n\nLOCATIONS:\n";
-    foreach ($locations as $location) {
-        echo "    > $location\n";
     }
 }
 
@@ -113,8 +104,30 @@ function show_last_tweets($config) {
 }
 
 function collect_tweets($config) {
-    collect_tweets_after_last($config);
-    collect_tweets_before_first($config);
+    $after = collect_tweets_after_last($config);
+    $before = collect_tweets_before_first($config);
+    $total = $after + $before;
+
+    if ($total == 0) {
+        echo "\n   No new tweets collected\n";
+    } else {
+        echo "\n   Tweets collected: $total\n";
+    }
+}
+
+function get_tags_from_text($text) {
+    preg_match_all("/#(\\w+)/", $text, $matches);
+    $hashtags = [];
+    $locations = [];
+    foreach ($matches[0] as $match) {
+        if (!in_array($match, $hashtags)) {
+            $hashtags []= $match;
+            if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
+                $locations []= substr($match, 1);
+            }
+        }
+    }
+    return $locations;
 }
 
 function collect_tweets_after_last($config) {
@@ -142,9 +155,12 @@ function collect_tweets_after_last($config) {
         return;
     }
 
+    $stored = 0;
+
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
         $status = $tweet->full_text;
+
         if (isInterestingTweet($status)) {
             $coloured_status = preg_replace(
                 "/(AyudaAlimentosCoronavirus)/i",
@@ -154,12 +170,15 @@ function collect_tweets_after_last($config) {
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
             store_tweet_in_db($tid, $nick, $status);
+            $stored++;
         }
     }
 
     $new_last = $tweets[0]->id_str;
     echo "    LAST updated from $last to $new_last\n";
     store_boundary_last($new_last);
+
+    return $stored;
 }
 
 function collect_tweets_before_first($config) {
@@ -191,6 +210,8 @@ function collect_tweets_before_first($config) {
         array_shift($tweets);
     }
 
+    $stored = 0;
+
     foreach($tweets as $tweet) {
         $nick = $tweet->user->screen_name;
         $status = $tweet->full_text;
@@ -203,12 +224,15 @@ function collect_tweets_before_first($config) {
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
             store_tweet_in_db($tid, $nick, $status);
+            $stored++;
         }
     }
 
     $new_first = $tweets[count($tweets) - 1]->id_str;
     echo "    FIRST updated from $first to $new_first\n";
     store_boundary_first($new_first);
+
+    return $stored;
 }
 
 function isInterestingTweet($text) {
