@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  app:
+    image: httpd:2.4.41-alpine
+    volumes:
+      - .:/usr/local/apache2/htdocs
+    ports:
+      - 3000:80
+
+  backend:
+    build: ./php
+    volumes:
+      - ./php:/opt/app
+      - /opt/app/vendor
