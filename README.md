@@ -1,48 +1,61 @@
 # ayuda-alimentos-coronavirus
 
-Map to show tweets under the #AyudaAlimentosCoronavirus hashtag
+Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus
 
-## Quick start
+Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](https://pepellou.github.io/ayuda-alimentos-coronavirus/)
 
-0) Clone this repo (you should know how :grimacing:)
 
-1) Set up your config file by copying it from config.php.ini:
+## Cómo contribuir
+
+- Puedes aportar feedback dirigiéndote a [@pepellou en Twitter](https://twitter.com/pepellou)
+- Explora [la lista de issues](https://github.com/pepellou/ayuda-alimentos-coronavirus/issues) y deja comentarios en ellas, o haz PRs que las resuelvan
+
+
+## Instalación local
+
+0) Clona este repositorio (deberías saber cómo :grimacing:)
+
+1) Crea el archivo de configuración copiando de config.php.ini:
 
 ```bash
     cd php
     cp config.php.ini config.php
 ```
 
-2) Edit the config.php file and replace all `FILL_ME` values with the appropriate values.
+2) Edita dicho archivo de configuración config.php reemplazando todos los `FILL_ME` por los valores adecuados.
 
-3) Update project dependencies:
+3) Actualiza las dependencias:
 
 ```bash
     cd php
     composer install
 ```
 
-4) See last tweets:
+4) Comprueba que puedes consultar los últimos tweets:
 
 ```bash
     php php/run.php last
 ```
 
-5) Set up your firebase config file by copying it from firebase-credentials.json.ini:
+5) Configura firebase copiando el archivo firebase-credentials.json.ini:
 
 ```bash
     cd php
     cp firebase-credentials.json.ini firebase-credentials.json
 ```
 
-6) Edit the firebase-credentials.json file and replace all `FILL_ME` values with the appropriate values.
+6) Edita el archivo firebase-credentials.json reemplazando todos los `FILL_ME` por los valores adecuados.
 
-7) Collect some tweets:
+7) Comprueba que puedes recolectar tweets:
 
 ```bash
     php php/run.php collect
 ```
 
-## Screenshots
+## Capturas de pantalla
 
-(will appear here)
+![Listado filtrable](/screenshots/list.png)
+
+![Mapa](/screenshots/map.png)
+
+![Mostrar últimos](/screenshots/show_last.png)
