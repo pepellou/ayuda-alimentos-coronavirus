@@ -56,6 +56,24 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
     php php/run.php collect
 ```
 
+## Instalación local con Docker
+
+### Requisitos
+
+- docker 19+
+- docker-compose 1.25+
+
+### Comandos
+
+- Arrancar la web (sólo html):
+  ```
+  docker-compose up --build
+  ```
+- Limpiar containers, volúmenes e imágenes:
+  ```
+  docker-compose down --rmi local --volumes
+  ```
+
 ## Capturas de pantalla
 
 ![Listado filtrable](/screenshots/list.png)
