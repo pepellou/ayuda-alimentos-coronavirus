@@ -52,6 +52,10 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
     php php/run.php collect
 ```
 
-## Screenshots
+## Capturas de pantalla
 
-(will appear here)
+![Listado filtrable](/screenshots/list.png)
+
+![Mapa](/screenshots/map.png)
+
+![Mostrar últimos](/screenshots/show_last.png)
