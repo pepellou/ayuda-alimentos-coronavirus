@@ -24,6 +24,8 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 
 2) Edita dicho archivo de configuración config.php reemplazando todos los `FILL_ME` por los valores adecuados.
 
+(pídeme los datos [por DM en Twitter](https://twitter.com/messages/compose?recipient_id=133220267))
+
 3) Actualiza las dependencias:
 
 ```bash
@@ -45,6 +47,8 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 ```
 
 6) Edita el archivo firebase-credentials.json reemplazando todos los `FILL_ME` por los valores adecuados.
+
+(pídeme los datos [por DM en Twitter](https://twitter.com/messages/compose?recipient_id=133220267))
 
 7) Comprueba que puedes recolectar tweets:
 
