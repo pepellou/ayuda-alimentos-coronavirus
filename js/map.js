@@ -25,7 +25,7 @@ function TweetsMap() {
     self.init = function() {
         self._map = L.map('mapid', {
             minZoom: 3,
-            maxZoom: 12
+            maxZoom: 13
         }).setView([39.62,-4.25], 7);
 
         self._circles = L.featureGroup();
@@ -72,7 +72,7 @@ function TweetsMap() {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
-            radius: 1200
+            radius: 750
         }).addTo(self._circles);
         circle.bindPopup(text);
     };
