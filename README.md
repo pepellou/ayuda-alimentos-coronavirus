@@ -75,6 +75,9 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
   ```
   docker-compose up app
   ```
+
+  La web está accesible en: `http://localhost:3000`
+
 - Ejecutar comandos del backend:
   ```
   docker-compose run --rm backend <COMANDO>
