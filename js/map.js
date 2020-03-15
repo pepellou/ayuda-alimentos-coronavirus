@@ -1,3 +1,22 @@
+const DEFAULT_TYPE = 'needHelp'
+
+const icons = {
+  needHelp: L.icon({
+    iconUrl: "../img/icons/icon_sos.svg",
+    iconSize: [25, 25],
+    shadowUrl: '../img/icons/icon_shadow.png',
+    shadowSize: [100, 35],
+    shadowAnchor: [53, 6]
+  }),
+  volunteer: L.icon({
+    iconUrl: "../img/icons/icon_volunteer.svg",
+    iconSize: [35, 35],
+    shadowUrl: '../img/icons/icon_shadow.png',
+    shadowSize: [100, 35],
+    shadowAnchor: [50, 5]
+  })
+};
+
 var fill_map_with_all_tweets = function(map, tweets) {
     map.clearTweets();
     for (id in tweets) {
@@ -54,27 +73,26 @@ function TweetsMap() {
         var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
         var popupText = "<p>" + tweet.message + "</p><p><a target='_blank' href='" + link + "'>Ver tweet</a></p>";
         if (tweet.gps != undefined) {
-            self.addCircle(
+            self.addMarker(
                 [tweet.gps.lat, tweet.gps.lon],
-                popupText
+                popupText,
+                tweet.type
             );
         }
         if (tweet.gps2 != undefined) {
-            self.addCircle(
+            self.addMarker(
                 [tweet.gps2.lat, tweet.gps2.lon],
-                popupText
+                popupText,
+                tweet.type
             );
         }
     };
 
-    self.addCircle = function(gps, text) {
-        var circle = L.circle(gps, {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 750
-        }).addTo(self._circles);
-        circle.bindPopup(text);
+    self.addMarker = function(gps, text, type = DEFAULT_TYPE) {
+      const icon = icons[type];
+
+      var marker = L.marker(gps, { icon }).addTo(self._map);
+      marker.bindPopup(text);
     };
 
     return self.init();

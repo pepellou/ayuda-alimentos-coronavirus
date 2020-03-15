@@ -95,8 +95,13 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 
 ## Capturas de pantalla
 
-![Listado filtrable](/screenshots/list.png)
+![Listado filtrable](/img/screenshots/list.png)
 
-![Mapa](/screenshots/map.png)
+![Mapa](/img/screenshots/map.png)
 
-![Mostrar últimos](/screenshots/show_last.png)
+![Mostrar últimos](/img/screenshots/show_last.png)
+
+### Iconos utilizados
+
+[SOS Emergency by Hali Gali Harun from the Noun Project](https://thenounproject.com/search/?q=sos&i=457451)
+[give love by Justin Blake from the Noun Project](https://thenounproject.com/search/?q=hand%20heart&i=865924)
