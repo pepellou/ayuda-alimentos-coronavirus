@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 23.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FFFFFF;}
-	.st2{fill:#299672;}
+	.heart{fill:#FFFFFF;}
+	.hand{fill:#299672;}
 </style>
-<circle class="st0" cx="47.2" cy="68.5" r="18"/>
-<path class="st2" d="M83.1,41.2c-2.8-2.2-5.8,0-7,1.3l-6.8,9.9c0,0-1.2,1.8-3.3,1.5c-1.7-0.3-2-3.8-2-5l2.8-28.8
+<circle class="heart" cx="47.2" cy="68.5" r="18"/>
+<path class="hand" d="M83.1,41.2c-2.8-2.2-5.8,0-7,1.3l-6.8,9.9c0,0-1.2,1.8-3.3,1.5c-1.7-0.3-2-3.8-2-5l2.8-28.8
 	c0.2-0.2,0.3-2-0.7-3.3c-0.7-1-1.8-1.5-3.3-1.7c-1.2-0.2-2.2,0.2-3.1,0.8c-1.7,1.5-1.8,4.3-1.8,4.8l-2.7,20.6c0,0-0.3,2.5-1.7,2.5
 	c-0.3,0-0.7-0.8-0.8-3.3c-0.5-4.3-2.5-27-2.5-27c0-0.2-0.3-2.2-2-3.3c-1-0.7-2.3-0.8-4-0.5c-4.1,0.8-4.3,5-4,7.1l2,25.5
 	c0,0,0,1.8-0.3,2.3c-0.2,0.2-0.3,0.3-0.5,0.3c-1,0.2-1.5-2.2-1.8-3.1l-6.8-21.7c0,0-0.7-1.8-2.3-2.8c-1-0.3-2.2-0.3-3.3,0
