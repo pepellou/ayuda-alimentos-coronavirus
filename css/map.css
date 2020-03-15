@@ -4,7 +4,7 @@ body, #mapid {
 }
 
 #mapid {
-    z-index: -1;
+    z-index: 0;
 }
 
 .leaflet-popup-content p {
@@ -15,11 +15,11 @@ body, #mapid {
     font-size: 0.8em;
 }
 
-#menu{
+#map__menu{
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     top: 11px;
-    left: 45px;
+    left: 65px;
     padding: .3em .6em;
     background-color: white;
     border-radius: 3px;
