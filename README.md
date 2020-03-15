@@ -62,12 +62,28 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 
 - docker 19+
 - docker-compose 1.25+
+- Configurar `php/config.php` y `php/firebase-credentials.json` como se especifica en la sección anterior
 
 ### Comandos
 
+- Construir/descargar las imágenes necesarias:
+  ```
+  docker-compose pull
+  docker-compose build
+  ```
 - Arrancar la web (sólo html):
   ```
-  docker-compose up --build
+  docker-compose up app
+  ```
+- Ejecutar comandos del backend:
+  ```
+  docker-compose run --rm backend <COMANDO>
+  ```
+  Ejemplo:
+  ```
+  docker-compose run --rm backend db
+  docker-compose run --rm backend last
+  docker-compose run --rm backend collect
   ```
 - Limpiar containers, volúmenes e imágenes:
   ```

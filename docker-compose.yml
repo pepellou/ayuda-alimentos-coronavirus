@@ -7,3 +7,9 @@ services:
       - .:/usr/local/apache2/htdocs
     ports:
       - 3000:80
+
+  backend:
+    build: ./php
+    volumes:
+      - ./php:/opt/app
+      - /opt/app/vendor
