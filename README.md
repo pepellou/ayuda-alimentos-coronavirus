@@ -1,8 +1,8 @@
-# ayuda-alimentos-coronavirus
+<h1 align="center">ayuda-alimentos-coronavirus</h1>
 
-Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus
+<p align="center">Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus</p>
 
-Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](https://pepellou.github.io/ayuda-alimentos-coronavirus/)
+<p align="center"><a href="https://pepellou.github.io/ayuda-alimentos-coronavirus/">https://pepellou.github.io/ayuda-alimentos-coronavirus/</a></p>
 
 
 ## Cómo contribuir
