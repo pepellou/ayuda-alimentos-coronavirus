@@ -5,6 +5,17 @@
 <p align="center"><a href="https://pepellou.github.io/ayuda-alimentos-coronavirus/">https://pepellou.github.io/ayuda-alimentos-coronavirus/</a></p>
 
 
+# Tabla de Contenidos
+
+* [Cómo contribuir](#cómo-contribuir)
+* [Instalación local](#instalación-local)
+* [Instalación local con Docker](#instalación-local-con-docker)
+    * [Requisitos](#requisitos)
+    * [Comandos](#comandos)
+* [Capturas de pantalla](#capturas-de-pantalla)
+    * [Iconos utilizados](#iconos-utilizados)
+
+
 ## Cómo contribuir
 
 - Puedes aportar feedback dirigiéndote a [@pepellou en Twitter](https://twitter.com/pepellou)
