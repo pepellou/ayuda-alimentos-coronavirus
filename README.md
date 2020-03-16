@@ -114,6 +114,10 @@
 
 ### Iconos utilizados
 
+<img src="https://raw.githubusercontent.com/pepellou/ayuda-alimentos-coronavirus/master/img/icons/icon_sos.svg?sanitize=true" width="10%">
+
 [SOS Emergency by Hali Gali Harun from the Noun Project](https://thenounproject.com/search/?q=sos&i=457451)
+
+<img src="https://raw.githubusercontent.com/pepellou/ayuda-alimentos-coronavirus/master/img/icons/icon_volunteer.svg?sanitize=true" width="10%">
 
 [give love by Justin Blake from the Noun Project](https://thenounproject.com/search/?q=hand%20heart&i=865924)
