@@ -2,16 +2,16 @@ const DEFAULT_TYPE = 'needHelp'
 
 const icons = {
   needHelp: L.icon({
-    iconUrl: "../img/icons/icon_sos.svg",
+    iconUrl: "img/icons/icon_sos.svg",
     iconSize: [25, 25],
-    shadowUrl: '../img/icons/icon_shadow.png',
+    shadowUrl: 'img/icons/icon_shadow.png',
     shadowSize: [100, 35],
     shadowAnchor: [53, 6]
   }),
   volunteer: L.icon({
-    iconUrl: "../img/icons/icon_volunteer.svg",
+    iconUrl: "img/icons/icon_volunteer.svg",
     iconSize: [35, 35],
-    shadowUrl: '../img/icons/icon_shadow.png',
+    shadowUrl: 'img/icons/icon_shadow.png',
     shadowSize: [100, 35],
     shadowAnchor: [50, 5]
   })
