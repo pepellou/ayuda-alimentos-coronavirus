@@ -104,4 +104,5 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 ### Iconos utilizados
 
 [SOS Emergency by Hali Gali Harun from the Noun Project](https://thenounproject.com/search/?q=sos&i=457451)
+
 [give love by Justin Blake from the Noun Project](https://thenounproject.com/search/?q=hand%20heart&i=865924)
