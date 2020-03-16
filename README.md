@@ -1,8 +1,19 @@
-# ayuda-alimentos-coronavirus
+<h1 align="center">ayuda-alimentos-coronavirus</h1>
 
-Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus
+<p align="center">Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus</p>
 
-Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](https://pepellou.github.io/ayuda-alimentos-coronavirus/)
+<p align="center"><a href="https://pepellou.github.io/ayuda-alimentos-coronavirus/">https://pepellou.github.io/ayuda-alimentos-coronavirus/</a></p>
+
+
+# Tabla de Contenidos
+
+* [Cómo contribuir](#cómo-contribuir)
+* [Instalación local](#instalación-local)
+* [Instalación local con Docker](#instalación-local-con-docker)
+    * [Requisitos](#requisitos)
+    * [Comandos](#comandos)
+* [Capturas de pantalla](#capturas-de-pantalla)
+    * [Iconos utilizados](#iconos-utilizados)
 
 
 ## Cómo contribuir
@@ -103,5 +114,10 @@ Míralo en acción en [https://pepellou.github.io/ayuda-alimentos-coronavirus/](
 
 ### Iconos utilizados
 
+<img src="https://raw.githubusercontent.com/pepellou/ayuda-alimentos-coronavirus/master/img/icons/icon_sos.svg?sanitize=true" width="10%">
+
 [SOS Emergency by Hali Gali Harun from the Noun Project](https://thenounproject.com/search/?q=sos&i=457451)
+
+<img src="https://raw.githubusercontent.com/pepellou/ayuda-alimentos-coronavirus/master/img/icons/icon_volunteer.svg?sanitize=true" width="10%">
+
 [give love by Justin Blake from the Noun Project](https://thenounproject.com/search/?q=hand%20heart&i=865924)
