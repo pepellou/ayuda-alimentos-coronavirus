@@ -7,7 +7,7 @@ var fill_table_with_all_tweets = function(tweets) {
     $('#tweets').html('');
     for (id in tweets) {
         var tweet = tweets[id];
-        if (no_gps_info(tweet)) { return }
+        if (no_gps_info(tweet)) { continue; }
 
         var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
         var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
