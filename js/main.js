@@ -7,6 +7,8 @@ var fill_table_with_all_tweets = function(tweets) {
     $('#tweets').html('');
     for (id in tweets) {
         var tweet = tweets[id];
+        if (no_gps_info(tweet)) { return }
+
         var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
         var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
         var tags_filter_class = 'filter-by-tag-' + id;
@@ -45,6 +47,10 @@ var init_firebase = function() {
     };
 
     firebase.initializeApp(firebaseConfig);
+};
+
+var no_gps_info = function(tweet) {
+  return tweet.gps == undefined && tweet.gps2 == undefined;
 };
 
 var filter_table_by_tag = function(tag) {
