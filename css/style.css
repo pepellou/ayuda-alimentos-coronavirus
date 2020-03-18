@@ -11,41 +11,20 @@ body {
     right: 0;
 }
 
-@media only screen and (max-width: 670px) {
-    /* body {
-        width: 90%;
-    }
+@media only screen and (max-width: 560px) {
     table {
         font-size: 14px;
-    } */
+    }
 }
-/*OK hasta 560px*/
-@media only screen and (max-width: 524px) {
-    /* body {
+
+@media only screen and (max-width: 500px) {
+    body {
         width: 95%;
     }
-    h1 {
-        font-size: 2rem;
-    }
-    table th {
-        font-size: 12px;
-    } */
-}
-/*OK hasta 470*/
-@media only screen and (max-width: 470px) {
-    /* body {
-    }
-
-    table th {
-        font-size: 12px;
-    } */
-}
-@media only screen and (max-width: 375px) {
     h1 {
         font-size: 1.5rem;
     }
     table {
-        
+        font-size: 12px;
     }
 }
-@media only screen and (max-width: 320px) {}
