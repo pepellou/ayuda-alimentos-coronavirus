@@ -13,18 +13,69 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </head>
     <body>
-        <table id="tweets">
-            <thead>
-                <th>Tags</th>
-                <th>Mensaje</th>
-                <th>Tweet</th>
-                <th></th>
+        <table id="tweets" class="table table-stripped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Tags</th>
+                    <th>Mensaje</th>
+                    <th>Tweet</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
+
+        <div id="edit-modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar elemento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <strong>@<span class="nick"></span></strong>:
+                            <span class="text"></span>
+                        </p>
+                        <form>
+                            <input type="hidden" id="edit-modal-id" />
+                            <div class="form-group">
+                                <label for="edit-modal-hashtags">Hashtags</label>
+                                <input type="text" class="form-control" id="edit-modal-hashtags" aria-describedby="emailHelp" placeholder="Hashtags de twitter">
+                                <small id="emailHelp" class="form-text text-muted">Elimina los que no reflejen localizaciones</small>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="edit-modal-gps-lat">Latitud</label>
+                                    <input type="text" class="form-control" id="edit-modal-gps-lat">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="edit-modal-gps-lon">Longitud</label>
+                                    <input type="text" class="form-control" id="edit-modal-gps-lon">
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="edit-modal-volunteer">
+                                <label class="form-check-label" for="edit-modal-volunteer">Ofrece ayuda</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>

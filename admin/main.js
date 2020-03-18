@@ -37,21 +37,57 @@ $(function() {
                     + '</td><td><a href="'
                     + link
                     + '" target="_blank">Ver tweet</a></td>'
-                    + '<td><button data-action="edit-tags" data-id="'
+                    + '<td><button data-action="edit" data-id="'
                     + id
-                    + '" data-tags="'
-                    + tweet.tags
-                    + '">Editar tags</button> '
+                    + '" data-id="'
+                    + id
+                    + '">Editar</button> <button data-action="delete" data-id="'
+                    + id
+                    + '" data-id="'
+                    + id
+                    + '">Borrar</button> '
                     + '</td></tr>'
             );
         }
         $('button').on('click', function() {
             var button = $(this);
             var action = button.data('action');
-            if (action == 'edit-tags') {
-                //var id = button.data('id');
-                //database.ref('tweets/' + id).remove();
+            if (action == 'edit') {
+                var id = button.data('id');
+                database.ref('tweets/' + id).on('value', function(snapshot) {
+                    var tweet = snapshot.val();
+                    $('#edit-modal-id').val(id);
+                    $('#edit-modal span.nick').html(tweet.nick)
+                    $('#edit-modal span.text').html(tweet.message)
+                    $('#edit-modal-hashtags').val(tweet.tags)
+                    $('#edit-modal-volunteer').prop('checked', tweet.type == 'volunteer');
+                    $('#edit-modal-gps-lat').val(tweet.gps != undefined ? tweet.gps.lat : '')
+                    $('#edit-modal-gps-lon').val(tweet.gps != undefined ? tweet.gps.lon : '')
+                    $('#edit-modal').modal()
+                });
+            } else if (action == 'delete') {
+                var id = button.data('id');
+                if (confirm("Seguro de borrar?")) {
+                    database.ref('tweets/' + id).remove()
+                }
             }
         });
+    });
+
+    $('#edit-modal button.btn-primary').on('click', function() {
+        var id = $('#edit-modal-id').val();
+        var lat = $('#edit-modal-gps-lat').val();
+        var lon = $('#edit-modal-gps-lon').val();
+        var tweet = {
+            nick: $('#edit-modal span.nick').html(),
+            message: $('#edit-modal span.text').html(),
+            tags: $('#edit-modal-hashtags').val(),
+            type: $('#edit-modal-volunteer').is(':checked') ? 'volunteer' : 'need-help'
+        };
+        if (lat != '' && lon != '') {
+            tweet.gps = { lat: lat, lon: lon };
+        }
+        database.ref('tweets/' + id).set(tweet);
+        $('#edit-modal').modal('hide');
     });
 });
