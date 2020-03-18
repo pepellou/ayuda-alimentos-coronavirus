@@ -17,6 +17,10 @@ const icons = {
   })
 };
 
+var get_link = function(tweet) {
+    return tweet.url != undefined ? tweet.url : 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+};
+
 var fill_map_with_all_tweets = function(map, tweets) {
     map.clearTweets();
     for (id in tweets) {
@@ -70,7 +74,7 @@ function TweetsMap() {
     };
 
     self.addTweet = function(tweet) {
-        var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+        var link = get_link(tweet);
         var popupText = "<p>" + tweet.message + "</p><p><a target='_blank' href='" + link + "'>Ver tweet</a></p>";
         if (tweet.gps != undefined) {
             self.addMarker(

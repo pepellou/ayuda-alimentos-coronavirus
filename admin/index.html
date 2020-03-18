@@ -13,6 +13,11 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </head>
     <body>
+
+        <header class="row mb-4">
+            <button data-action="new" >Añadir elemento</button>   
+        </header>
+
         <table id="tweets" class="table table-stripped">
             <thead class="thead-dark">
                 <tr>
@@ -31,7 +36,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Editar elemento</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -45,8 +50,8 @@
                             <input type="hidden" id="edit-modal-tweet-id" />
                             <div class="form-group">
                                 <label for="edit-modal-hashtags">Hashtags</label>
-                                <input type="text" class="form-control" id="edit-modal-hashtags" aria-describedby="emailHelp" placeholder="Hashtags de twitter">
-                                <small id="emailHelp" class="form-text text-muted">Elimina los que no reflejen localizaciones</small>
+                                <input type="text" class="form-control" id="edit-modal-hashtags" aria-describedby="hashtagsHelp" placeholder="Hashtags de twitter">
+                                <small id="hashtagsHelp" class="form-text text-muted">Elimina los que no reflejen localizaciones</small>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -66,8 +71,62 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="new-modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Añadir elemento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <input type="hidden" id="new-modal-id" />
+                            <input type="hidden" id="new-modal-tweet-id" />
+                            <div class="form-group">
+                                <label for="new-modal-url">Link</label>
+                                <input type="text" class="form-control" id="new-modal-url" placeholder="Url donde se comparte">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-modal-url">Nick</label>
+                                <input type="text" class="form-control" id="new-modal-nick" placeholder="Nick que lo comparte">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-modal-hashtags">Hashtags de localización</label>
+                                <input type="text" class="form-control" id="new-modal-hashtags" placeholder="Separados,por,comas,sin,espacios,ni,almohadillas">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-modal-message">Mensaje</label>
+                                <textarea rows="5" class="form-control" id="new-modal-message" placeholder=""></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="new-modal-gps-lat">Latitud</label>
+                                    <input type="text" class="form-control" id="new-modal-gps-lat">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="new-modal-gps-lon">Longitud</label>
+                                    <input type="text" class="form-control" id="new-modal-gps-lon">
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="new-modal-volunteer">
+                                <label class="form-check-label" for="new-modal-volunteer">Ofrece ayuda</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Añadir</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>

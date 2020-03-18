@@ -38,7 +38,8 @@ function store_tweet_in_db($tid, $nick, $text) {
             'id'      => $tid,
             'nick'    => $nick,
             'message' => $text,
-            'tags'    => implode(',', get_tags_from_text($text))
+            'tags'    => implode(',', get_tags_from_text($text)),
+            'url'     => "https://twitter.com/$nick/status/$tid"
         ]);
 }
 
