@@ -1,3 +1,7 @@
+var get_link = function(tweet) {
+    return 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+};
+
 var fill_table_with_all_tweets = function(tweets) {
     var count = 0;
     for (id in tweets) {
@@ -9,7 +13,7 @@ var fill_table_with_all_tweets = function(tweets) {
         var tweet = tweets[id];
         if (no_gps_info(tweet)) { continue; }
 
-        var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+        var link = get_link(tweet);
         var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
         var tags_filter_class = 'filter-by-tag-' + id;
         var tags_cell = '';

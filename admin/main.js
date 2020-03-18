@@ -12,6 +12,10 @@ var init_firebase = function() {
     firebase.initializeApp(firebaseConfig);
 };
 
+var get_link = function(tweet) {
+    return 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+};
+
 $(function() {
     init_firebase();
 
@@ -22,7 +26,7 @@ $(function() {
         $('table#tweets tbody').html('');
         for (id in tweets) {
             var tweet = tweets[id];
-            var link = 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+            var link = get_link(tweet);
             var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
             var tags_cell = '';
             for (var i in tags) {
