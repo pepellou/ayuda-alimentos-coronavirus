@@ -75,7 +75,7 @@ function TweetsMap() {
 
     self.addTweet = function(tweet) {
         var link = get_link(tweet);
-        var popupText = "<p>" + tweet.message + "</p><p><a target='_blank' href='" + link + "'>Ver tweet</a></p>";
+        var popupText = "<p>" + tweet.message + "</p><p><a target='_blank' href='" + link + "'>Ver mensaje original</a></p>";
         if (tweet.gps != undefined) {
             self.addMarker(
                 [tweet.gps.lat, tweet.gps.lon],

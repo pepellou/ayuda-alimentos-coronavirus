@@ -40,7 +40,7 @@ $(function() {
                     + tweet.message
                     + '</td><td><a href="'
                     + link
-                    + '" target="_blank">Ver tweet</a></td>'
+                    + '" target="_blank">Ver mensaje original</a></td>'
                     + '<td><button data-action="edit" data-id="'
                     + id
                     + '" data-id="'

@@ -28,7 +28,7 @@ var fill_table_with_all_tweets = function(tweets) {
                 + tweet.message
                 + '</td> <td> <a target="_blank" href="'
                 + link
-                + '"> Ver tweet </a> </td> </tr>'
+                + '"> Ver mensaje original </a> </td> </tr>'
         );
         $('a.' + tags_filter_class).on("click", function(e) {
             e.preventDefault();
