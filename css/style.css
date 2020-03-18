@@ -11,3 +11,20 @@ body {
     right: 0;
 }
 
+@media only screen and (max-width: 560px) {
+    table {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    body {
+        width: 95%;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    table {
+        font-size: 12px;
+    }
+}
