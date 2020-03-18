@@ -13,7 +13,7 @@ var init_firebase = function() {
 };
 
 var get_link = function(tweet) {
-    return 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
+    return tweet.url != undefined ? tweet.url : 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
 };
 
 $(function() {
