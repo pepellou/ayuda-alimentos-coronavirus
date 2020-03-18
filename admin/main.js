@@ -64,13 +64,15 @@ $(function() {
                     $('#edit-modal-volunteer').prop('checked', tweet.type == 'volunteer');
                     $('#edit-modal-gps-lat').val(tweet.gps != undefined ? tweet.gps.lat : '')
                     $('#edit-modal-gps-lon').val(tweet.gps != undefined ? tweet.gps.lon : '')
-                    $('#edit-modal').modal()
+                    $('#edit-modal').modal();
                 });
             } else if (action == 'delete') {
                 var id = button.data('id');
                 if (confirm("Seguro de borrar?")) {
-                    database.ref('tweets/' + id).remove()
+                    database.ref('tweets/' + id).remove();
                 }
+            } else if (action == 'new') {
+                $('#new-modal').modal();
             }
         });
     });
@@ -91,5 +93,25 @@ $(function() {
         }
         database.ref('tweets/' + id).set(tweet);
         $('#edit-modal').modal('hide');
+    });
+
+    $('#new-modal button.btn-primary').on('click', function() {
+        var id = $('#new-modal-id').val();
+        var lat = $('#new-modal-gps-lat').val();
+        var lon = $('#new-modal-gps-lon').val();
+        var url = $('#new-modal-url').val();
+        var tweet = {
+            id: '',
+            nick: $('#new-modal-nick').val(),
+            message: $('#new-modal-message').val(),
+            tags: $('#new-modal-hashtags').val(),
+            type: $('#new-modal-volunteer').is(':checked') ? 'volunteer' : 'need-help',
+            url: $('#new-modal-url').val()
+        };
+        if (lat != '' && lon != '') {
+            tweet.gps = { lat: lat, lon: lon };
+        }
+        database.ref('tweets').push(tweet);
+        $('#new-modal').modal('hide');
     });
 });
