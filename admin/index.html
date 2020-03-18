@@ -11,6 +11,10 @@
         <link rel="stylesheet" href="../css/style.css">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+        <link rel="stylesheet" href="map.css">
     </head>
     <body>
 
@@ -118,6 +122,10 @@
                                 </div>
                             </div>
 
+                            <div class="form-row" style="min-width: 600px">
+                                <div id="new-modal-map"></div>
+                            </div>
+
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="new-modal-volunteer">
                                 <label class="form-check-label" for="new-modal-volunteer">Ofrece ayuda</label>
@@ -137,6 +145,7 @@
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
         <script src="../js/bootstrap.min.js"></script>
         <script src="main.js"></script>
+        <script src="map.js"></script>
     </body>
 </html>
 
