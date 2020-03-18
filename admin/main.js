@@ -37,11 +37,15 @@ $(function() {
                     + '</td><td><a href="'
                     + link
                     + '" target="_blank">Ver tweet</a></td>'
-                    + '<td><button data-action="edit-tags" data-id="'
+                    + '<td><button data-action="edit" data-id="'
                     + id
-                    + '" data-tags="'
-                    + tweet.tags
-                    + '">Editar tags</button> '
+                    + '" data-id="'
+                    + id
+                    + '">Editar</button> <button data-action="delete" data-id="'
+                    + id
+                    + '" data-id="'
+                    + id
+                    + '">Borrar</button> '
                     + '</td></tr>'
             );
         }
@@ -49,8 +53,13 @@ $(function() {
             var button = $(this);
             var action = button.data('action');
             if (action == 'edit-tags') {
-                //var id = button.data('id');
-                //database.ref('tweets/' + id).remove();
+                var id = button.data('id');
+                // TODO edit form
+            } else if (action == 'delete') {
+                var id = button.data('id');
+                if (confirm("Seguro de borrar?")) {
+                    database.ref('tweets/' + id).remove()
+                }
             }
         });
     });
