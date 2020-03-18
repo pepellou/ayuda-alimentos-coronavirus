@@ -26,7 +26,7 @@ var fill_table_with_all_tweets = function(tweets) {
                 + tags_cell
                 + '</th> <td>'
                 + tweet.message
-                + '<br><br> <a target="_blank" href="'
+                + '</td> <td> <a target="_blank" href="'
                 + link
                 + '"> Ver mensaje original </a> </td> </tr>'
         );
