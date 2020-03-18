@@ -57,6 +57,7 @@ $(function() {
                 database.ref('tweets/' + id).on('value', function(snapshot) {
                     var tweet = snapshot.val();
                     $('#edit-modal-id').val(id);
+                    $('#edit-modal-tweet-id').val(tweet.id);
                     $('#edit-modal span.nick').html(tweet.nick)
                     $('#edit-modal span.text').html(tweet.message)
                     $('#edit-modal-hashtags').val(tweet.tags)
@@ -79,6 +80,7 @@ $(function() {
         var lat = $('#edit-modal-gps-lat').val();
         var lon = $('#edit-modal-gps-lon').val();
         var tweet = {
+            id: $('#edit-modal-tweet-id').val(),
             nick: $('#edit-modal span.nick').html(),
             message: $('#edit-modal span.text').html(),
             tags: $('#edit-modal-hashtags').val(),
