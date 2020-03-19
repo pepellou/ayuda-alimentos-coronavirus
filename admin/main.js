@@ -90,7 +90,7 @@ $(function() {
             nick: $('#edit-modal span.nick').html(),
             message: $('#edit-modal span.text').html(),
             tags: $('#edit-modal-hashtags').val(),
-            type: $('#edit-modal-volunteer').is(':checked') ? 'volunteer' : 'need-help'
+            type: $('#edit-modal-volunteer').is(':checked') ? 'volunteer' : 'needHelp'
         };
         if (lat != '' && lon != '') {
             tweet.gps = { lat: lat, lon: lon };
@@ -109,7 +109,7 @@ $(function() {
             nick: $('#new-modal-nick').val(),
             message: $('#new-modal-message').val(),
             tags: $('#new-modal-hashtags').val(),
-            type: $('#new-modal-volunteer').is(':checked') ? 'volunteer' : 'need-help',
+            type: $('#new-modal-volunteer').is(':checked') ? 'volunteer' : 'needHelp',
             url: $('#new-modal-url').val()
         };
         if (lat != '' && lon != '') {
