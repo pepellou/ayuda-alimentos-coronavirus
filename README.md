@@ -1,8 +1,8 @@
-<h1 align="center">ayuda-alimentos-coronavirus</h1>
+<h1 align="center">sosvecinos.org</h1>
 
-<p align="center">Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus</p>
+<p align="center">Recopilando mensajes de ayuda y socorro en un mapa para ayudarnos unos a otros.</p>
 
-<p align="center"><a href="https://pepellou.github.io/ayuda-alimentos-coronavirus/">https://pepellou.github.io/ayuda-alimentos-coronavirus/</a></p>
+<p align="center"><a href="http://sosvecinos.org">http://sosvecinos.org</a></p>
 
 
 # Tabla de Contenidos
