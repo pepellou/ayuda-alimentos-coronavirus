@@ -3,11 +3,6 @@ var get_link = function(tweet) {
 };
 
 var fill_table_with_all_tweets = function(tweets) {
-    var count = 0;
-    for (id in tweets) {
-        count++;
-    }
-    $('span#count').text(count);
     $('#tweets').html('');
     for (id in tweets) {
         var tweet = tweets[id];
