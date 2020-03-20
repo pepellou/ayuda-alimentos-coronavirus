@@ -20,10 +20,13 @@ $(function() {
     init_firebase();
 
     var database = firebase.database();
+    var tableOfProcessedMessages = $('table#messages tbody');
+    var tableOfMessagesToProcess = $('table#messagesToProcess tbody');
 
     database.ref('tweets').on('value', function(snapshot) {
         var tweets = snapshot.val();
-        $('table#tweets tbody').html('');
+        tableOfProcessedMessages.html('');
+        tableOfMessagesToProcess.html('');
         for (id in tweets) {
             var tweet = tweets[id];
             var link = get_link(tweet);
@@ -33,7 +36,8 @@ $(function() {
                 var tag = tags[i];
                 tags_cell += '#' + tag + '<br/>';
             }
-            $('table#tweets tbody').prepend(
+            var table = (tweet.gps != undefined) ? tableOfProcessedMessages : tableOfMessagesToProcess;
+            table.prepend(
                 '<tr><td>'
                     + tags_cell
                     + '</td><td>'
