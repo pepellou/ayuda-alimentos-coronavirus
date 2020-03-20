@@ -116,6 +116,42 @@ function collect_tweets($config) {
     }
 }
 
+function add_tweet($config, $tweet_url) {
+    $url = 'https://api.twitter.com/1.1/statuses/show.json';
+    $requestMethod = 'GET';
+    $tweet_id = get_id_from_tweet_url($tweet_url);
+    $getfield = '?id=' . $tweet_id
+        .'&include_my_retweet=false'
+        .'&include_ext_alt_text=false'
+        .'&include_card_uri=false'
+        .'&tweet_mode=extended'
+    ;
+
+    $twitter = new TwitterAPIExchange(array(
+        'oauth_access_token' => $config['oauth']['access_token'],
+        'oauth_access_token_secret' => $config['oauth']['access_token_secret'],
+        'consumer_key' => $config['oauth']['consumer_key'],
+        'consumer_secret' => $config['oauth']['consumer_secret']
+    ));
+
+    $tweet = json_decode($twitter->setGetfield($getfield)
+        ->buildOauth($url, $requestMethod)
+        ->performRequest());
+
+    store_tweet_in_db(
+        $tweet_id,
+        $tweet->user->screen_name,
+        $tweet->full_text
+    );
+
+    echo "Tweet added\n";
+}
+
+function get_id_from_tweet_url($url) {
+    $parts = explode('/', $url);
+    return array_pop($parts);
+}
+
 function get_tags_from_text($text) {
     preg_match_all("/#(\\w+)/", $text, $matches);
     $hashtags = [];
@@ -244,6 +280,7 @@ function show_commands($script) {
     echo "    php ".$script." db                 \033[01;33m  - shows database contents\033[0m\n";
     echo "    php ".$script." last               \033[01;33m  - shows last tweets\033[0m\n";
     echo "    php ".$script." collect            \033[01;33m  - collects tweets\033[0m\n";
+    echo "    php ".$script." add <url>          \033[01;33m  - adds a single tweet\033[0m\n";
 }
 
 if (isset($_GET) && count($_GET) > 0 && isset($_GET['params'])) {
@@ -270,6 +307,13 @@ switch($command) {
         break;
     case "collect":
         collect_tweets($config);
+        break;
+    case "add":
+        if (count($argv) <= 2) {
+            echo "\033[01;31mMissing parameter url\033[0m\n";
+            exit;
+        }
+        add_tweet($config, $argv[2]);
         break;
     default:
         echo "\033[01;31mCommand '${command}' not known, try one of the following:\033[0m\n";
