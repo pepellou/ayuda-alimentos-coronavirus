@@ -31,6 +31,30 @@ $(function() {
                     + '</td></tr>'
             );
         }
+        $('button').on('click', function() {
+            var button = $(this);
+            var action = button.data('action');
+            if (action == 'edit') {
+                var id = button.data('id');
+                console.log('edit ' + id);
+            } else if (action == 'delete') {
+                var id = button.data('id');
+                if (confirm("Seguro de borrar?")) {
+                    console.log('delete ' + id);
+                }
+            } else if (action == 'new') {
+                $('#new-modal').modal();
+            }
+        });
+    });
+
+    $('#new-modal button.btn-primary').on('click', function() {
+        var query = {
+            query: $('#new-modal-query').val(),
+            collect_old: $('#new-modal-collect-old').is(':checked'),
+        };
+        database.ref('queries').push(query);
+        $('#new-modal').modal('hide');
     });
 
 });

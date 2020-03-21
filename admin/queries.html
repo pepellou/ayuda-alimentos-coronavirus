@@ -104,39 +104,14 @@
                     <div class="modal-body">
                         <form>
                             <input type="hidden" id="new-modal-id" />
-                            <input type="hidden" id="new-modal-tweet-id" />
                             <div class="form-group">
-                                <label for="new-modal-url">Link</label>
-                                <input type="text" class="form-control" id="new-modal-url" placeholder="Url donde se comparte">
+                                <label for="new-modal-query"></label>
+                                <input type="text" class="form-control" id="new-modal-query" placeholder="Búsqueda a hacer en Twitter">
                             </div>
-                            <div class="form-group">
-                                <label for="new-modal-url">Nick</label>
-                                <input type="text" class="form-control" id="new-modal-nick" placeholder="Nick que lo comparte">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-modal-hashtags">Hashtags de localización</label>
-                                <input type="text" class="form-control" id="new-modal-hashtags" placeholder="Separados,por,comas,sin,espacios,ni,almohadillas">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-modal-message">Mensaje</label>
-                                <textarea rows="5" class="form-control" id="new-modal-message" placeholder=""></textarea>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="new-modal-gps-lat">Latitud</label>
-                                    <input type="text" class="form-control" id="new-modal-gps-lat">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="new-modal-gps-lon">Longitud</label>
-                                    <input type="text" class="form-control" id="new-modal-gps-lon">
-                                </div>
-                            </div>
-
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="new-modal-volunteer">
-                                <label class="form-check-label" for="new-modal-volunteer">Ofrece ayuda</label>
+                                <input type="checkbox" class="form-check-input" id="new-modal-collect-old">
+                                <label class="form-check-label" for="new-modal-collect-old">Recopilar antiguos?</label>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary">Añadir</button>
