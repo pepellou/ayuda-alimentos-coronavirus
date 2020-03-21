@@ -33,11 +33,7 @@ $(function() {
                     + '" target="_blank">Ver mensaje original</a></td>'
                     + '<td><button data-action="edit" data-id="'
                     + id
-                    + '" data-id="'
-                    + id
                     + '">Editar</button> <button data-action="delete" data-id="'
-                    + id
-                    + '" data-id="'
                     + id
                     + '">Borrar</button> '
                     + '</td></tr>'

@@ -21,11 +21,7 @@ $(function() {
                     + '</td>'
                     + '<td><button data-action="edit" data-id="'
                     + id
-                    + '" data-id="'
-                    + id
                     + '">Editar</button> <button data-action="delete" data-id="'
-                    + id
-                    + '" data-id="'
                     + id
                     + '">Borrar</button> '
                     + '</td></tr>'
@@ -38,10 +34,12 @@ $(function() {
                 var id = button.data('id');
                 database.ref('queries/' + id).on('value', function(snapshot) {
                     var query = snapshot.val();
-                    $('#edit-modal-id').val(id);
-                    $('#edit-modal-query').val(query.query);
-                    $('#edit-modal-collect-old').prop('checked', query.collect_old);
-                    $('#edit-modal').modal();
+                    if (query != null) {
+                        $('#edit-modal-id').val(id);
+                        $('#edit-modal-query').val(query.query);
+                        $('#edit-modal-collect-old').prop('checked', query.collect_old);
+                        $('#edit-modal').modal();
+                    }
                 });
             } else if (action == 'delete') {
                 var id = button.data('id');
