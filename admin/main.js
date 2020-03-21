@@ -1,23 +1,9 @@
-var init_firebase = function() {
-    var firebaseConfig = {
-        apiKey: "AIzaSyCNCfCoMnJMx7ncX6An3zCQc4TWsK60300",
-        authDomain: "ayuda-alimentos-coronavirus.firebaseapp.com",
-        databaseURL: "https://ayuda-alimentos-coronavirus.firebaseio.com",
-        projectId: "ayuda-alimentos-coronavirus",
-        storageBucket: "ayuda-alimentos-coronavirus.appspot.com",
-        messagingSenderId: "622677547690",
-        appId: "1:622677547690:web:0a04757a7c6ab63dacced3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-};
-
 var get_link = function(tweet) {
     return tweet.url != undefined ? tweet.url : 'https://twitter.com/' + tweet.nick + '/status/' + tweet.id;
 };
 
 $(function() {
-    init_firebase();
+    firebase.initializeApp(firebaseConfig);
 
     var database = firebase.database();
     var tableOfProcessedMessages = $('table#messages tbody');
