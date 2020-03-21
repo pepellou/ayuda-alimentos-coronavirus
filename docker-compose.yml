@@ -9,7 +9,7 @@ services:
       - 3000:80
 
   backend:
-    build: ./php
+    build: ./backend
     volumes:
       - ./php:/opt/app
       - /opt/app/vendor

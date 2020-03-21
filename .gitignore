@@ -1,4 +1,4 @@
-php/config.php
-php/vendor/
-php/composer.lock
-php/firebase-credentials.json
+backend/config.php
+backend/vendor/
+backend/composer.lock
+backend/firebase-credentials.json
