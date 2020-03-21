@@ -24,12 +24,8 @@ function get_boundaries() {
     return get_db()->getReference('boundaries')->getValue();
 }
 
-function store_boundary_last($last) {
-    get_db()->getReference("boundaries")->getChild('last')->set($last);
-}
-
-function store_boundary_first($first) {
-    get_db()->getReference("boundaries")->getChild('first')->set($first);
+function store_boundary($key, $value) {
+    get_db()->getReference("boundaries")->getChild($key)->set($value);
 }
 
 function store_tweet_in_db($tid, $nick, $text) {
@@ -104,16 +100,35 @@ function show_last_tweets($config) {
     }
 }
 
-function collect_tweets($config) {
-    $after = collect_tweets_after_last($config);
-    $before = collect_tweets_before_first($config);
-    $total = $after + $before;
+function collect_from_query($config, $query, $collect_old_tweets = true) {
+    $collected_tweets = 0;
 
-    if ($total == 0) {
+    $collected_tweets += get_tweets(
+        $config,
+        $query,
+        [ "since" => get_boundaries()["last"] ]
+    );
+
+    if ($collect_old_tweets) {
+        $collected_tweets += get_tweets(
+            $config,
+            $query,
+            [ "until" => get_boundaries()["first"] ]
+        );
+    }
+
+    if ($collected_tweets == 0) {
         echo "\n   No new tweets collected\n";
     } else {
-        echo "\n   Tweets collected: $total\n";
+        echo "\n   Tweets collected: $collected_tweets\n";
     }
+}
+
+function collect_tweets($config) {
+    $query = '"%23AyudaAlimentosCoronavirus"';
+    $collect_old_tweets = false;
+
+    collect_from_query($config, $query, $collect_old_tweets);
 }
 
 function add_tweet($config, $tweet_url) {
@@ -167,14 +182,21 @@ function get_tags_from_text($text) {
     return $locations;
 }
 
-function collect_tweets_after_last($config) {
+function get_tweets($config, $query, $options) {
     $url = 'https://api.twitter.com/1.1/search/tweets.json';
-    $last = get_boundaries()["last"];
-    $getfield = '?q="%23AyudaAlimentosCoronavirus"'
-        .'&count=100'
-        .'&tweet_mode=extended'
-        .'&since_id='.$last
-    ;
+
+    $getfield = '?q=' . $query
+        . '&count=100'
+        . '&tweet_mode=extended';
+
+    if (isset($options['since'])) {
+        $getfield .= '&since_id=' . $options['since'];
+    }
+
+    if (isset($options['until'])) {
+        $getfield .= '&max_id=' . $options['until'];
+    }
+
     $requestMethod = 'GET';
 
     $twitter = new TwitterAPIExchange(array(
@@ -188,6 +210,13 @@ function collect_tweets_after_last($config) {
         ->performRequest());
 
     $tweets = $results->statuses;
+
+    if (isset($options['until'])) {
+        if ($tweets[0]->id_str == $options['until']) {
+            array_shift($tweets);
+        }
+    }
+
     if (count($tweets) < 1) {
         return;
     }
@@ -211,63 +240,13 @@ function collect_tweets_after_last($config) {
         }
     }
 
-    $new_last = $tweets[0]->id_str;
-    echo "    LAST updated from $last to $new_last\n";
-    store_boundary_last($new_last);
-
-    return $stored;
-}
-
-function collect_tweets_before_first($config) {
-    $url = 'https://api.twitter.com/1.1/search/tweets.json';
-    $first = get_boundaries()["first"];
-    $getfield = '?q="%23AyudaAlimentosCoronavirus"'
-        .'&count=100'
-        .'&tweet_mode=extended'
-        .'&max_id='.$first
-    ;
-    $requestMethod = 'GET';
-
-    $twitter = new TwitterAPIExchange(array(
-        'oauth_access_token' => $config['oauth']['access_token'],
-        'oauth_access_token_secret' => $config['oauth']['access_token_secret'],
-        'consumer_key' => $config['oauth']['consumer_key'],
-        'consumer_secret' => $config['oauth']['consumer_secret']
-    ));
-    $results = json_decode($twitter->setGetfield($getfield)
-        ->buildOauth($url, $requestMethod)
-        ->performRequest());
-
-    $tweets = $results->statuses;
-    if (count($tweets) < 2) {
-        return;
+    if (isset($options['since'])) {
+        store_boundary('last', $tweets[0]->id_str);
     }
 
-    if ($tweets[0]->id_str == $first) {
-        array_shift($tweets);
+    if (isset($options['until'])) {
+        store_boundary_first('first', $tweets[count($tweets) - 1]->id_str);
     }
-
-    $stored = 0;
-
-    foreach($tweets as $tweet) {
-        $nick = $tweet->user->screen_name;
-        $status = $tweet->full_text;
-        if (isInterestingTweet($status)) {
-            $coloured_status = preg_replace(
-                "/(AyudaAlimentosCoronavirus)/i",
-                "\033[01;31m".'${1}'."\033[0m",
-                $status
-            );
-            $tid = $tweet->id_str;
-            echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-            store_tweet_in_db($tid, $nick, $status);
-            $stored++;
-        }
-    }
-
-    $new_first = $tweets[count($tweets) - 1]->id_str;
-    echo "    FIRST updated from $first to $new_first\n";
-    store_boundary_first($new_first);
 
     return $stored;
 }
