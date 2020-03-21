@@ -101,6 +101,8 @@ function show_last_tweets($config) {
 }
 
 function collect_from_query($config, $query, $collect_old_tweets = true) {
+    echo " Collecting tweets with query '$query'...\n";
+
     $collected_tweets = 0;
 
     $collected_tweets += get_tweets(
@@ -125,10 +127,14 @@ function collect_from_query($config, $query, $collect_old_tweets = true) {
 }
 
 function collect_tweets($config) {
-    $query = '"%23AyudaAlimentosCoronavirus"';
-    $collect_old_tweets = false;
-
-    collect_from_query($config, $query, $collect_old_tweets);
+    $queries = get_db()->getReference('queries')->getValue();
+    foreach ($queries as $key => $query) {
+        collect_from_query(
+            $config,
+            $query['query'],
+            ( isset($query['collect_old']) && $query['collect_old'] )
+        );
+    }
 }
 
 function add_tweet($config, $tweet_url) {
