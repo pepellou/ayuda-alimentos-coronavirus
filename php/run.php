@@ -251,6 +251,16 @@ function get_tweets($config, $query, $options) {
     return $stored;
 }
 
+function show_queries($config) {
+    $queries = get_db()->getReference('queries')->getValue();
+    foreach ($queries as $key => $query) {
+        echo " $key:\n";
+        echo "     query: " . $query['query'] . "\n";
+        echo "     first: " . $query['first'] . "\n";
+        echo "     last:  " . $query['last'] . "\n";
+    }
+}
+
 function isInterestingTweet($text) {
     return substr($text, 0, 4) != "RT @";
 }
@@ -260,6 +270,7 @@ function show_commands($script) {
     echo "    php ".$script." last               \033[01;33m  - shows last tweets\033[0m\n";
     echo "    php ".$script." collect            \033[01;33m  - collects tweets\033[0m\n";
     echo "    php ".$script." add <url>          \033[01;33m  - adds a single tweet\033[0m\n";
+    echo "    php ".$script." queries            \033[01;33m  - shows the configured queries to collect tweets\033[0m\n";
 }
 
 if (isset($_GET) && count($_GET) > 0 && isset($_GET['params'])) {
@@ -293,6 +304,9 @@ switch($command) {
             exit;
         }
         add_tweet($config, $argv[2]);
+        break;
+    case "queries":
+        show_queries($config);
         break;
     default:
         echo "\033[01;31mCommand '${command}' not known, try one of the following:\033[0m\n";
