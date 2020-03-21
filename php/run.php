@@ -20,12 +20,8 @@ function get_all_tweets_in_db() {
     return get_db()->getReference('tweets')->getValue();
 }
 
-function get_boundaries() {
-    return get_db()->getReference('boundaries')->getValue();
-}
-
-function store_boundary($key, $value) {
-    get_db()->getReference("boundaries")->getChild($key)->set($value);
+function store_boundary($id, $key, $value) {
+    get_db()->getReference("queries/" + $id)->getChild($key)->set($value);
 }
 
 function store_tweet_in_db($tid, $nick, $text) {
@@ -100,22 +96,23 @@ function show_last_tweets($config) {
     }
 }
 
-function collect_from_query($config, $query, $collect_old_tweets = true) {
-    echo " Collecting tweets with query '$query'...\n";
+function collect_from_query($config, $query) {
+    echo " Collecting tweets with query '" . $query['query'] . "'...\n";
 
     $collected_tweets = 0;
 
     $collected_tweets += get_tweets(
         $config,
         $query,
-        [ "since" => get_boundaries()["last"] ]
+        [ "since" => $query["last"] ]
     );
 
+    $collect_old_tweets = ( !isset($query['collect_old']) || $query['collect_old'] );
     if ($collect_old_tweets) {
         $collected_tweets += get_tweets(
             $config,
             $query,
-            [ "until" => get_boundaries()["first"] ]
+            [ "until" => $query["first"] ]
         );
     }
 
@@ -129,11 +126,8 @@ function collect_from_query($config, $query, $collect_old_tweets = true) {
 function collect_tweets($config) {
     $queries = get_db()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
-        collect_from_query(
-            $config,
-            $query['query'],
-            ( isset($query['collect_old']) && $query['collect_old'] )
-        );
+        $query['id'] = $key;
+        collect_from_query($config, $query);
     }
 }
 
@@ -191,7 +185,7 @@ function get_tags_from_text($text) {
 function get_tweets($config, $query, $options) {
     $url = 'https://api.twitter.com/1.1/search/tweets.json';
 
-    $getfield = '?q=' . $query
+    $getfield = '?q=' . $query['query']
         . '&count=100'
         . '&tweet_mode=extended';
 
@@ -247,11 +241,11 @@ function get_tweets($config, $query, $options) {
     }
 
     if (isset($options['since'])) {
-        store_boundary('last', $tweets[0]->id_str);
+        store_boundary($query['id'], 'last', $tweets[0]->id_str);
     }
 
     if (isset($options['until'])) {
-        store_boundary_first('first', $tweets[count($tweets) - 1]->id_str);
+        store_boundary($query['id'], 'first', $tweets[count($tweets) - 1]->id_str);
     }
 
     return $stored;
