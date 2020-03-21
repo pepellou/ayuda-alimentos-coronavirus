@@ -255,9 +255,10 @@ function show_queries($config) {
     $queries = get_db()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
         echo " $key:\n";
-        echo "     query: " . $query['query'] . "\n";
-        echo "     first: " . $query['first'] . "\n";
-        echo "     last:  " . $query['last'] . "\n";
+        echo "     query:       '" . $query['query'] . "'\n";
+        echo "     collect old? " . (isset($query['first']) ? $query['first'] : 'null' ) . "\n";
+        echo "     first:       " . (isset($query['first']) ? $query['first'] : 'null' ) . "\n";
+        echo "     last:        " . (isset($query['last'] ) ? $query['last']  : 'null' ). "\n";
     }
 }
 
