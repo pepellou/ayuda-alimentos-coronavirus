@@ -256,7 +256,7 @@ function show_queries($config) {
     foreach ($queries as $key => $query) {
         echo " $key:\n";
         echo "     query:       '" . $query['query'] . "'\n";
-        echo "     collect old? " . (isset($query['first']) ? $query['first'] : 'null' ) . "\n";
+        echo "     collect old? " . (isset($query['collect_old']) ? ($query['collect_old'] ? 'true' : 'false' ) : 'false' ) . "\n";
         echo "     first:       " . (isset($query['first']) ? $query['first'] : 'null' ) . "\n";
         echo "     last:        " . (isset($query['last'] ) ? $query['last']  : 'null' ). "\n";
     }
