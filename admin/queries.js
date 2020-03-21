@@ -36,7 +36,13 @@ $(function() {
             var action = button.data('action');
             if (action == 'edit') {
                 var id = button.data('id');
-                console.log('edit ' + id);
+                database.ref('queries/' + id).on('value', function(snapshot) {
+                    var query = snapshot.val();
+                    $('#edit-modal-id').val(id);
+                    $('#edit-modal-query').val(query.query);
+                    $('#edit-modal-collect-old').prop('checked', query.collect_old);
+                    $('#edit-modal').modal();
+                });
             } else if (action == 'delete') {
                 var id = button.data('id');
                 if (confirm("Seguro de borrar?")) {
@@ -51,10 +57,20 @@ $(function() {
     $('#new-modal button.btn-primary').on('click', function() {
         var query = {
             query: $('#new-modal-query').val(),
-            collect_old: $('#new-modal-collect-old').is(':checked'),
+            collect_old: $('#new-modal-collect-old').is(':checked')
         };
         database.ref('queries').push(query);
         $('#new-modal').modal('hide');
+    });
+
+    $('#edit-modal button.btn-primary').on('click', function() {
+        var id = $('#edit-modal-id').val();
+        var query = {
+            query: $('#edit-modal-query').val(),
+            collect_old: $('#edit-modal-collect-old').is(':checked')
+        };
+        database.ref('queries/' + id).set(query);
+        $('#edit-modal').modal('hide');
     });
 
 });
