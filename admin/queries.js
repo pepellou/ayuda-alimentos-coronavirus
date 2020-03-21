@@ -40,7 +40,7 @@ $(function() {
             } else if (action == 'delete') {
                 var id = button.data('id');
                 if (confirm("Seguro de borrar?")) {
-                    console.log('delete ' + id);
+                    database.ref('queries/' + id).remove();
                 }
             } else if (action == 'new') {
                 $('#new-modal').modal();
