@@ -1,31 +1,17 @@
 <?php
 require_once('TwitterAPIExchange.php');
-require __DIR__.'/vendor/autoload.php';
-
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
-
-function get_db() {
-    $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/firebase-credentials.json');
-
-    $firebase = (new Factory)
-        ->withServiceAccount($serviceAccount)
-        ->withDatabaseUri('https://ayuda-alimentos-coronavirus.firebaseio.com')
-        ->create();
-
-    return $firebase->getDatabase();
-}
+require __DIR__.'/src/Database.php';
 
 function get_all_tweets_in_db() {
-    return get_db()->getReference('tweets')->getValue();
+    return Database::get_db()->getReference('tweets')->getValue();
 }
 
 function store_boundary($id, $key, $value) {
-    get_db()->getReference("queries/" + $id)->getChild($key)->set($value);
+    Database::get_db()->getReference("queries/" + $id)->getChild($key)->set($value);
 }
 
 function store_tweet_in_db($tid, $nick, $text) {
-    get_db()->getReference("tweets")
+    Database::get_db()->getReference("tweets")
         ->push([
             'id'      => $tid,
             'nick'    => $nick,
@@ -124,7 +110,7 @@ function collect_from_query($config, $query) {
 }
 
 function collect_tweets($config) {
-    $queries = get_db()->getReference('queries')->getValue();
+    $queries = Database::get_db()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
         $query['id'] = $key;
         collect_from_query($config, $query);
@@ -252,7 +238,7 @@ function get_tweets($config, $query, $options) {
 }
 
 function show_queries($config) {
-    $queries = get_db()->getReference('queries')->getValue();
+    $queries = Database::get_db()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
         echo " $key:\n";
         echo "     query:       '" . $query['query'] . "'\n";
