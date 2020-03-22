@@ -2,16 +2,16 @@
 require_once('TwitterAPIExchange.php');
 require __DIR__.'/src/Database.php';
 
-function get_all_tweets_in_db() {
-    return Database::get_db()->getReference('tweets')->getValue();
+function get_all_tweets_in_db($db) {
+    return $db->get()->getReference('tweets')->getValue();
 }
 
-function store_boundary($id, $key, $value) {
-    Database::get_db()->getReference("queries/" + $id)->getChild($key)->set($value);
+function store_boundary($db, $id, $key, $value) {
+    $db->get()->getReference("queries/" + $id)->getChild($key)->set($value);
 }
 
-function store_tweet_in_db($tid, $nick, $text) {
-    Database::get_db()->getReference("tweets")
+function store_tweet_in_db($db, $tid, $nick, $text) {
+    $db->get()->getReference("tweets")
         ->push([
             'id'      => $tid,
             'nick'    => $nick,
@@ -21,8 +21,8 @@ function store_tweet_in_db($tid, $nick, $text) {
         ]);
 }
 
-function show_db($config) {
-    foreach(get_all_tweets_in_db() as $some_id => $tweet) {
+function show_db($db, $config) {
+    foreach(get_all_tweets_in_db($db) as $some_id => $tweet) {
         $nick = $tweet['nick'];
         $status = $tweet['message'];
 
@@ -82,12 +82,13 @@ function show_last_tweets($config) {
     }
 }
 
-function collect_from_query($config, $query) {
+function collect_from_query($db, $config, $query) {
     echo " Collecting tweets with query '" . $query['query'] . "'...\n";
 
     $collected_tweets = 0;
 
     $collected_tweets += get_tweets(
+        $db,
         $config,
         $query,
         [ "since" => $query["last"] ]
@@ -96,6 +97,7 @@ function collect_from_query($config, $query) {
     $collect_old_tweets = ( !isset($query['collect_old']) || $query['collect_old'] );
     if ($collect_old_tweets) {
         $collected_tweets += get_tweets(
+            $db,
             $config,
             $query,
             [ "until" => $query["first"] ]
@@ -109,15 +111,15 @@ function collect_from_query($config, $query) {
     }
 }
 
-function collect_tweets($config) {
-    $queries = Database::get_db()->getReference('queries')->getValue();
+function collect_tweets($db, $config) {
+    $queries = $db->get()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
         $query['id'] = $key;
-        collect_from_query($config, $query);
+        collect_from_query($db, $config, $query);
     }
 }
 
-function add_tweet($config, $tweet_url) {
+function add_tweet($db, $config, $tweet_url) {
     $url = 'https://api.twitter.com/1.1/statuses/show.json';
     $requestMethod = 'GET';
     $tweet_id = get_id_from_tweet_url($tweet_url);
@@ -140,6 +142,7 @@ function add_tweet($config, $tweet_url) {
         ->performRequest());
 
     store_tweet_in_db(
+        $db,
         $tweet_id,
         $tweet->user->screen_name,
         $tweet->full_text
@@ -168,7 +171,7 @@ function get_tags_from_text($text) {
     return $locations;
 }
 
-function get_tweets($config, $query, $options) {
+function get_tweets($db, $config, $query, $options) {
     $url = 'https://api.twitter.com/1.1/search/tweets.json';
 
     $getfield = '?q=' . $query['query']
@@ -221,24 +224,24 @@ function get_tweets($config, $query, $options) {
             );
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-            store_tweet_in_db($tid, $nick, $status);
+            store_tweet_in_db($db, $tid, $nick, $status);
             $stored++;
         }
     }
 
     if (isset($options['since'])) {
-        store_boundary($query['id'], 'last', $tweets[0]->id_str);
+        store_boundary($db, $query['id'], 'last', $tweets[0]->id_str);
     }
 
     if (isset($options['until'])) {
-        store_boundary($query['id'], 'first', $tweets[count($tweets) - 1]->id_str);
+        store_boundary($db, $query['id'], 'first', $tweets[count($tweets) - 1]->id_str);
     }
 
     return $stored;
 }
 
-function show_queries($config) {
-    $queries = Database::get_db()->getReference('queries')->getValue();
+function show_queries($db, $config) {
+    $queries = $db->get()->getReference('queries')->getValue();
     foreach ($queries as $key => $query) {
         echo " $key:\n";
         echo "     query:       '" . $query['query'] . "'\n";
@@ -267,6 +270,7 @@ if (isset($_GET) && count($_GET) > 0 && isset($_GET['params'])) {
 
 $script = $argv[0];
 $config = require __DIR__ . '/config.php';
+$db = new Database(__DIR__.'/firebase-credentials.json');
 
 if (count($argv) <= 1) {
     echo "\033[01;31mMissing command, try one of the following:\033[0m\n";
@@ -277,23 +281,23 @@ if (count($argv) <= 1) {
 $command = $argv[1];
 switch($command) {
     case "db":
-        show_db($config);
+        show_db($db, $config);
         break;
     case "last":
         show_last_tweets($config);
         break;
     case "collect":
-        collect_tweets($config);
+        collect_tweets($db, $config);
         break;
     case "add":
         if (count($argv) <= 2) {
             echo "\033[01;31mMissing parameter url\033[0m\n";
             exit;
         }
-        add_tweet($config, $argv[2]);
+        add_tweet($db, $config, $argv[2]);
         break;
     case "queries":
-        show_queries($config);
+        show_queries($db, $config);
         break;
     default:
         echo "\033[01;31mCommand '${command}' not known, try one of the following:\033[0m\n";
