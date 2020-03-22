@@ -21,7 +21,7 @@ final class TestableDatabase extends Database {
 
 final class DatabaseTest extends TestCase
 {
-    public function testGetReturnsFirebaseDatabase(): void
+    public function testGet_returnsFirebaseDatabase(): void
     {
         $this->theFirebase
              ->expects($this->once())
@@ -30,7 +30,7 @@ final class DatabaseTest extends TestCase
         $this->theDatabase->get();
     }
 
-    public function testGetOneReturnsReferenceToSpecificNode(): void
+    public function testGetOne_returnsReferenceToSpecificNode(): void
     {
         $aReference = 'anyValue';
         $anId = 'anyString';
@@ -43,7 +43,7 @@ final class DatabaseTest extends TestCase
         );
     }
 
-    public function testGetAllTweetsReturnsAllTweetsFromFirebase() : void
+    public function testGetAll_returnsAllElementsFromFirebase() : void
     {
         $aReference = 'anyValue';
         $expectedResult = "it's really an array, but any value works for the test";

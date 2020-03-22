@@ -1,16 +1,14 @@
 <?php
 require_once('TwitterAPIExchange.php');
 require __DIR__.'/src/Database/Database.php';
+require __DIR__.'/src/Entities/Message.php';
+require __DIR__.'/src/Util/StringUtils.php';
 
 function store_tweet_in_db($db, $tid, $nick, $text) {
+    $message = new Message($tid, $nick, $text);
+
     $db->get()->getReference("tweets")
-        ->push([
-            'id'      => $tid,
-            'nick'    => $nick,
-            'message' => $text,
-            'tags'    => implode(',', get_tags_from_text($text)),
-            'url'     => "https://twitter.com/$nick/status/$tid"
-        ]);
+        ->push($message->toArray());
 }
 
 function show_db($db, $config) {
