@@ -3,6 +3,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 use SosVecinos\Database\Database;
 use SosVecinos\Entities\Message;
+use SosVecinos\Services\Twitter;
 
 function show_db($db, $config) {
     foreach($db->getAll('tweets') as $some_id => $tweet) {
@@ -103,26 +104,11 @@ function collect_tweets($db, $config) {
 }
 
 function add_tweet($db, $config, $tweet_url) {
-    $url = 'https://api.twitter.com/1.1/statuses/show.json';
-    $requestMethod = 'GET';
     $tweet_id = get_id_from_tweet_url($tweet_url);
-    $getfield = '?id=' . $tweet_id
-        .'&include_my_retweet=false'
-        .'&include_ext_alt_text=false'
-        .'&include_card_uri=false'
-        .'&tweet_mode=extended'
-    ;
 
-    $twitter = new TwitterAPIExchange(array(
-        'oauth_access_token' => $config['oauth']['access_token'],
-        'oauth_access_token_secret' => $config['oauth']['access_token_secret'],
-        'consumer_key' => $config['oauth']['consumer_key'],
-        'consumer_secret' => $config['oauth']['consumer_secret']
-    ));
+    $twitter = new Twitter($config);
 
-    $tweet = json_decode($twitter->setGetfield($getfield)
-        ->buildOauth($url, $requestMethod)
-        ->performRequest());
+    $tweet = json_decode($twitter->getOne($tweet_id));
 
     $db->addOne(
         'tweets',
