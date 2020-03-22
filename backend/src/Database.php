@@ -6,21 +6,30 @@ use Kreait\Firebase\ServiceAccount;
 
 class Database {
 
-    protected $firebase;
+    protected $firebase = null;
+    private $credentials;
 
     public function __construct($credentials) {
-        $this->firebase = (new Factory)
-            ->withServiceAccount(ServiceAccount::fromJsonFile($credentials))
-            ->withDatabaseUri('https://ayuda-alimentos-coronavirus.firebaseio.com')
-            ->create();
+        $this->credentials = $credentials;
     }
 
     public function get() {
+        if (is_null($this->firebase)) {
+            $this->firebase = $this->createFirebase();
+        }
         return $this->firebase->getDatabase();
     }
 
     public function getAll($reference) {
         return $this->get()->getReference($reference)->getValue();
+    }
+
+    private function createFirebase()
+    {
+        return (new Factory)
+            ->withServiceAccount(ServiceAccount::fromJsonFile($this->credentials))
+            ->withDatabaseUri('https://ayuda-alimentos-coronavirus.firebaseio.com')
+            ->create();
     }
 
 }

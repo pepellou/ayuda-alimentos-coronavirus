@@ -10,7 +10,7 @@ use Kreait\Firebase\Database\Reference;
 final class TestableDatabase extends Database {
 
     public function __construct() {
-        parent::__construct(__DIR__.'/../firebase-credentials.json');
+        parent::__construct('any/path/really/because/this/is/a/mock.json');
     }
 
     public function setFirebase($firebase) {
