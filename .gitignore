@@ -2,3 +2,4 @@ backend/config.php
 backend/vendor/
 backend/composer.lock
 backend/firebase-credentials.json
+.phpunit.*.cache

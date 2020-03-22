@@ -6,7 +6,7 @@ use Kreait\Firebase\ServiceAccount;
 
 class Database {
 
-    private $firebase;
+    protected $firebase;
 
     public function __construct($credentials) {
         $this->firebase = (new Factory)
