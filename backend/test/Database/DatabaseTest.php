@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 require __DIR__.'/../../src/Database/Database.php';
 require __DIR__.'/../../src/Entities/Message.php';
 
+use SosVecinos\Database\Database;
+use SosVecinos\Entities\Message;
+
 use Kreait\Firebase;
 use Kreait\Firebase\Database as FirebaseDB;
 use Kreait\Firebase\Database\Reference;

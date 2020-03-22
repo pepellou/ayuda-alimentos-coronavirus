@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../../src/Entities/Message.php';
 
+use SosVecinos\Entities\Message;
 
 final class MessageTest extends TestCase
 {

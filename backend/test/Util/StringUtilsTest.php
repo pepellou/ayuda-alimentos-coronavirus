@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 require __DIR__.'/../../src/Util/StringUtils.php';
 
+use SosVecinos\Utils\StringUtils;
 
 final class StringUtilsTest extends TestCase
 {

@@ -1,5 +1,8 @@
 <?php
 
+namespace SosVecinos\Utils;
+
+
 final class StringUtils {
 
     public static function extractHashtags(string $text, array $blacklist = []) : string

@@ -2,7 +2,9 @@
 require_once('TwitterAPIExchange.php');
 require __DIR__.'/src/Database/Database.php';
 require __DIR__.'/src/Entities/Message.php';
-require __DIR__.'/src/Util/StringUtils.php';
+
+use SosVecinos\Database\Database;
+use SosVecinos\Entities\Message;
 
 function show_db($db, $config) {
     foreach($db->getAll('tweets') as $some_id => $tweet) {

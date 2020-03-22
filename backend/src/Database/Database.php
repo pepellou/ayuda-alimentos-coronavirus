@@ -1,5 +1,10 @@
 <?php
+
+namespace SosVecinos\Database;
+
 require __DIR__.'/../../vendor/autoload.php';
+
+use SosVecinos\Entities\Message;
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;

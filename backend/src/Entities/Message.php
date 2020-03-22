@@ -1,5 +1,8 @@
 <?php
 
+namespace SosVecinos\Entities;
+
+use SosVecinos\Utils\StringUtils;
 
 class Message {
 
