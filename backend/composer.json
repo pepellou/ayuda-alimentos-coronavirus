@@ -1,4 +1,6 @@
 {
+    "name": "pepellou/sosvecinos",
+    "description": "Scripts to collect SOS and help messages published in social networks",
     "require": {
         "kreait/firebase-php": "^3.0"
     },
