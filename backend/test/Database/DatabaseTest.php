@@ -2,6 +2,7 @@
 use PHPUnit\Framework\TestCase;
 
 require __DIR__.'/../../src/Database/Database.php';
+require __DIR__.'/../../src/Entities/Message.php';
 
 use Kreait\Firebase;
 use Kreait\Firebase\Database as FirebaseDB;
@@ -61,6 +62,20 @@ final class DatabaseTest extends TestCase
         );
     }
 
+    public function testAddOne_addsSpecificNodeToReferencedCollection(): void
+    {
+        $theReference = 'anyValue';
+        $theMessage   = $this->anyMessage();
+
+        $this->expectFirebaseToAccessTheReference($theReference);
+        $this->theReference
+             ->expects($this->once())
+             ->method('push')
+             ->with($this->identicalTo($theMessage->toArray()));
+
+        $this->theDatabase->addOne($theReference, $theMessage);
+    }
+
     private $theFirebase;
     private $theFirebaseDb;
     private $theDatabase;
@@ -88,6 +103,15 @@ final class DatabaseTest extends TestCase
              ->method('getReference')
              ->with($this->identicalTo($reference))
              ->willReturn($this->theReference);
+    }
+
+    private function anyMessage() : Message
+    {
+        return Message::fromTweet(
+            'aSampleId',
+            'aNickname',
+            'a sample #text with some #hashtags #AyudaAlimentosCoronavirus'
+        );
     }
 
 }

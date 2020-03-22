@@ -4,13 +4,6 @@ require __DIR__.'/src/Database/Database.php';
 require __DIR__.'/src/Entities/Message.php';
 require __DIR__.'/src/Util/StringUtils.php';
 
-function store_tweet_in_db($db, $tid, $nick, $text) {
-    $message = new Message($tid, $nick, $text);
-
-    $db->get()->getReference("tweets")
-        ->push($message->toArray());
-}
-
 function show_db($db, $config) {
     foreach($db->getAll('tweets') as $some_id => $tweet) {
         $nick = $tweet['nick'];
@@ -131,11 +124,13 @@ function add_tweet($db, $config, $tweet_url) {
         ->buildOauth($url, $requestMethod)
         ->performRequest());
 
-    store_tweet_in_db(
-        $db,
-        $tweet_id,
-        $tweet->user->screen_name,
-        $tweet->full_text
+    $db->addOne(
+        'tweets',
+        new Message(
+            $tweet_id,
+            $tweet->user->screen_name,
+            $tweet->full_text
+        )
     );
 
     echo "Tweet added\n";
@@ -214,7 +209,7 @@ function get_tweets($db, $config, $query, $options) {
             );
             $tid = $tweet->id_str;
             echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-            store_tweet_in_db($db, $tid, $nick, $status);
+            $db->addOne('tweets', new Message($tid, $nick, $status));
             $stored++;
         }
     }

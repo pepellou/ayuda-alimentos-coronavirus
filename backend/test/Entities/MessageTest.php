@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-require __DIR__.'/../../src/Entities/Message.php';
+require_once __DIR__.'/../../src/Entities/Message.php';
 
 
 final class MessageTest extends TestCase

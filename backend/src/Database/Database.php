@@ -28,6 +28,10 @@ class Database {
         return $this->get()->getReference("${reference}/${id}");
     }
 
+    public function addOne($reference, Message $element) {
+        return $this->get()->getReference($reference)->push($element->toArray());
+    }
+
     private function createFirebase()
     {
         return (new Factory)
