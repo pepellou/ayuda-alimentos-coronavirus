@@ -95,7 +95,7 @@ function collect_from_query($db, $config, $query) {
 }
 
 function collect_tweets($db, $config) {
-    $queries = $db->get()->getReference('queries')->getValue();
+    $queries = $db->getAll('queries');
     foreach ($queries as $key => $query) {
         $query['id'] = $key;
         collect_from_query($db, $config, $query);
@@ -230,8 +230,7 @@ function get_tweets($db, $config, $query, $options) {
 }
 
 function show_queries($db, $config) {
-    $queries = $db->get()->getReference('queries')->getValue();
-    foreach ($queries as $key => $query) {
+    foreach ($db->getAll('queries') as $key => $query) {
         echo " $key:\n";
         echo "     query:       '" . $query['query'] . "'\n";
         echo "     collect old? " . (isset($query['collect_old']) ? ($query['collect_old'] ? 'true' : 'false' ) : 'false' ) . "\n";
