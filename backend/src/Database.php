@@ -19,4 +19,8 @@ class Database {
         return $this->firebase->getDatabase();
     }
 
+    public function getAll($reference) {
+        return $this->get()->getReference($reference)->getValue();
+    }
+
 }

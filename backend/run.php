@@ -2,10 +2,6 @@
 require_once('TwitterAPIExchange.php');
 require __DIR__.'/src/Database.php';
 
-function get_all_tweets_in_db($db) {
-    return $db->get()->getReference('tweets')->getValue();
-}
-
 function store_boundary($db, $id, $key, $value) {
     $db->get()->getReference("queries/" + $id)->getChild($key)->set($value);
 }
@@ -22,7 +18,7 @@ function store_tweet_in_db($db, $tid, $nick, $text) {
 }
 
 function show_db($db, $config) {
-    foreach(get_all_tweets_in_db($db) as $some_id => $tweet) {
+    foreach($db->getAll('tweets') as $some_id => $tweet) {
         $nick = $tweet['nick'];
         $status = $tweet['message'];
 
