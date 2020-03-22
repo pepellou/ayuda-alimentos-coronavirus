@@ -1,6 +1,6 @@
 <?php
 require_once('TwitterAPIExchange.php');
-require __DIR__.'/src/Database.php';
+require __DIR__.'/src/Database/Database.php';
 
 function store_tweet_in_db($db, $tid, $nick, $text) {
     $db->get()->getReference("tweets")

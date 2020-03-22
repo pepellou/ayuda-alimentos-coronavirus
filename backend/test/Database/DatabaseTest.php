@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-require __DIR__.'/../src/Database.php';
+require __DIR__.'/../../src/Database/Database.php';
 
 use Kreait\Firebase;
 use Kreait\Firebase\Database as FirebaseDB;
