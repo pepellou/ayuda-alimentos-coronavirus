@@ -2,7 +2,9 @@
 
 namespace SosVecinos\Entities;
 
-use SosVecinos\Utils\StringUtils;
+require_once __DIR__.'/../../vendor/autoload.php';
+
+use SosVecinos\Util\StringUtils;
 
 class Message {
 

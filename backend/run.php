@@ -1,7 +1,5 @@
 <?php
-require_once('TwitterAPIExchange.php');
-require __DIR__.'/src/Database/Database.php';
-require __DIR__.'/src/Entities/Message.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 use SosVecinos\Database\Database;
 use SosVecinos\Entities\Message;

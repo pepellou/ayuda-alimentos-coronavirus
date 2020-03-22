@@ -1,6 +1,8 @@
 <?php
 
-namespace SosVecinos\Utils;
+namespace SosVecinos\Util;
+
+require_once __DIR__.'/../../vendor/autoload.php';
 
 
 final class StringUtils {

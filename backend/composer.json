@@ -2,12 +2,16 @@
     "name": "pepellou/sosvecinos",
     "description": "Scripts to collect SOS and help messages published in social networks",
     "require": {
-        "kreait/firebase-php": "^3.0"
+        "kreait/firebase-php": "^3.0",
+        "j7mbo/twitter-api-php": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0"
     },
     "scripts": {
         "test": "vendor/bin/phpunit"
+    },
+    "autoload": {
+        "psr-4": {"SosVecinos\\": "src/"}
     }
 }

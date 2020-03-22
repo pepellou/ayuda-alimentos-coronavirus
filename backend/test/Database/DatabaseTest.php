@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-require __DIR__.'/../../src/Database/Database.php';
-require __DIR__.'/../../src/Entities/Message.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
 use SosVecinos\Database\Database;
 use SosVecinos\Entities\Message;

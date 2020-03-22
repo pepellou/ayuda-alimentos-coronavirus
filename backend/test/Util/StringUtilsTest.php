@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-require __DIR__.'/../../src/Util/StringUtils.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
-use SosVecinos\Utils\StringUtils;
+use SosVecinos\Util\StringUtils;
 
 final class StringUtilsTest extends TestCase
 {
