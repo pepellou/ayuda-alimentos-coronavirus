@@ -5,7 +5,7 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.1/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-    bootstrap="backend/vendor/autoload.php"
+    bootstrap="vendor/autoload.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -19,7 +19,7 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>backend/test/</directory>
+            <directory>test/</directory>
         </testsuite>
     </testsuites>
 
