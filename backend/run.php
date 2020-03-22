@@ -2,10 +2,6 @@
 require_once('TwitterAPIExchange.php');
 require __DIR__.'/src/Database.php';
 
-function store_boundary($db, $id, $key, $value) {
-    $db->get()->getReference("queries/" + $id)->getChild($key)->set($value);
-}
-
 function store_tweet_in_db($db, $tid, $nick, $text) {
     $db->get()->getReference("tweets")
         ->push([
@@ -226,11 +222,15 @@ function get_tweets($db, $config, $query, $options) {
     }
 
     if (isset($options['since'])) {
-        store_boundary($db, $query['id'], 'last', $tweets[0]->id_str);
+        $db->getOne("queries", $query['id'])
+           ->getChild('last')
+           ->set($tweets[0]->id_str);
     }
 
     if (isset($options['until'])) {
-        store_boundary($db, $query['id'], 'first', $tweets[count($tweets) - 1]->id_str);
+        $db->getOne("queries", $query['id'])
+           ->getChild('first')
+           ->set($tweets[count($tweets) - 1]->id_str);
     }
 
     return $stored;

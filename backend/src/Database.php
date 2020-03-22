@@ -24,6 +24,10 @@ class Database {
         return $this->get()->getReference($reference)->getValue();
     }
 
+    public function getOne($reference, $id) {
+        return $this->get()->getReference("${reference}/${id}");
+    }
+
     private function createFirebase()
     {
         return (new Factory)

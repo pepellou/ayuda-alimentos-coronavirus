@@ -17,7 +17,6 @@ final class TestableDatabase extends Database {
         $this->firebase = $firebase;
     }
 
-
 }
 
 final class DatabaseTest extends TestCase
@@ -29,6 +28,19 @@ final class DatabaseTest extends TestCase
              ->method('getDatabase');
 
         $this->theDatabase->get();
+    }
+
+    public function testGetOneReturnsReferenceToSpecificNode(): void
+    {
+        $aReference = 'anyValue';
+        $anId = 'anyString';
+
+        $this->expectFirebaseToAccessTheReference($aReference . '/' . $anId);
+
+        $this->assertEquals(
+            $this->theDatabase->getOne($aReference, $anId),
+            $this->theReference
+        );
     }
 
     public function testGetAllTweetsReturnsAllTweetsFromFirebase() : void
