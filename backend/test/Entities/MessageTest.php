@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__.'/../../vendor/autoload.php';
 
 use SosVecinos\Entities\Message;
+use SosVecinos\Util\OutputPrinter;
 
 final class MessageTest extends TestCase
 {
@@ -49,6 +50,40 @@ final class MessageTest extends TestCase
         );
     }
 
+    public function testToString(): void
+    {
+        $theId   = $this->anyString();
+        $theNick = $this->anyString();
+        $theText = $this->anyStringWithTags([ 'sampleTag', 'anotherTag', 'AyudaAlimentosCoronavirus' ]);
+        $theTags = 'sampleTag,anotherTag,AyudaAlimentosCoronavirus';
+        $theUrl  = $this->anyString();
+
+        $theMessage = new Message();
+        $theMessage->id   = $this->anyString();
+        $theMessage->nick = $this->anyString();
+        $theMessage->text = $this->anyString();
+        $theMessage->tags = $this->anyString();
+        $theMessage->url  = $this->anyString();
+
+        $this->assertEquals(
+            ' ' . OutputPrinter::WHITE[0] . '@' . $theMessage->nick . OutputPrinter::WHITE[1]
+            . ' said: "' . OutputPrinter::GREEN[0] . $theMessage->text . OutputPrinter::GREEN[1]
+            . '"' . "\n     (" . OutputPrinter::UNDERLINE[0] . $theMessage->url . OutputPrinter::UNDERLINE[1] . ")\n\n"
+            ,
+            $theMessage->__toString()
+        );
+    }
+
+    public function testIsRetweet() : void
+    {
+        $this->assertFalse( $this->createMessageWithText('a sample text')           ->isRetweet() );
+        $this->assertFalse( $this->createMessageWithText('a RT sample text')        ->isRetweet() );
+        $this->assertTrue ( $this->createMessageWithText('RT @user RT sample text') ->isRetweet() );
+        $this->assertTrue ( $this->createMessageWithText('RT @u RT sample text')    ->isRetweet() );
+        $this->assertFalse( $this->createMessageWithText('RT u @RT sample text')    ->isRetweet() );
+        $this->assertFalse( $this->createMessageWithText('x RT @RT sample text')    ->isRetweet() );
+    }
+
     private function anyString() {
         $someRandomStrings = [
             'any string would work',
@@ -67,6 +102,13 @@ final class MessageTest extends TestCase
         );
         array_unshift($toReturn, $this->anyString());
         return implode(' ', $toReturn);
+    }
+
+    private function createMessageWithText($text) : Message
+    {
+        $message = new Message();
+        $message->text = $text;
+        return $message;
     }
 
 }

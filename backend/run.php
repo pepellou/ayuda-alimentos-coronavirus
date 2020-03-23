@@ -5,45 +5,27 @@ use SosVecinos\Database\Database;
 use SosVecinos\Entities\Message;
 use SosVecinos\Services\Twitter;
 use SosVecinos\Util\StringUtils;
+use SosVecinos\Util\OutputPrinter;
 
 function show_db($db, $config) {
     foreach($db->getAll('tweets') as $some_id => $tweet) {
-        $tid = $tweet['id'];
-        $nick = $tweet['nick'];
-        $status = $tweet['message'];
-
-        $hashtags = StringUtils::extractHashtags($status);
-
-        $coloured_status = $status;
-        foreach ($hashtags as $hashtag) {
-            $coloured_status = preg_replace(
-                "/(#".$hashtag.")/i",
-                "\033[01;31m".'${1}'."\033[0m",
-                $coloured_status
-            );
-        }
-
-        echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
+        $message = Message::fromTweet($tweet['id'], $tweet['nick'], $tweet['message']);
+        echo $message->__toString();
     }
 }
 
 function show_last_tweets($config) {
     $twitter = new Twitter($config);
-    $results = json_decode(
-        $twitter->get("%23ayudaalimentoscoronavirus")
-    );
+    $results = json_decode( $twitter->get("%23ayudaalimentoscoronavirus") );
 
     foreach($results->statuses as $tweet) {
-        $nick = $tweet->user->screen_name;
-        $status = $tweet->full_text;
-        if (isInterestingTweet($status)) {
-            $coloured_status = preg_replace(
-                "/(AyudaAlimentosCoronavirus)/i",
-                "\033[01;31m".'${1}'."\033[0m",
-                $status
-            );
-            $tid = $tweet->id_str;
-            echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
+        $message = Message::fromTweet(
+            $tweet->id_str,
+            $tweet->user->screen_name,
+            $tweet->full_text
+        );
+        if (!$message->isRetweet()) {
+            echo $message->__toString();
         }
     }
 }
@@ -131,18 +113,15 @@ function get_tweets($db, $config, $query, $filters) {
     $stored = 0;
 
     foreach($tweets as $tweet) {
-        $nick = $tweet->user->screen_name;
-        $status = $tweet->full_text;
+        $message = new Message(
+            $tweet->id_str,
+            $tweet->user->screen_name,
+            $tweet->full_text
+        );
 
-        if (isInterestingTweet($status)) {
-            $coloured_status = preg_replace(
-                "/(AyudaAlimentosCoronavirus)/i",
-                "\033[01;31m".'${1}'."\033[0m",
-                $status
-            );
-            $tid = $tweet->id_str;
-            echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
-            $db->addOne('tweets', new Message($tid, $nick, $status));
+        if (!$message->isRetweet()) {
+            echo $message->__toString();
+            $db->addOne('tweets', $message);
             $stored++;
         }
     }
