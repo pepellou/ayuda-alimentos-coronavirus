@@ -4,34 +4,25 @@ require_once __DIR__.'/vendor/autoload.php';
 use SosVecinos\Database\Database;
 use SosVecinos\Entities\Message;
 use SosVecinos\Services\Twitter;
+use SosVecinos\Util\StringUtils;
 
 function show_db($db, $config) {
     foreach($db->getAll('tweets') as $some_id => $tweet) {
+        $tid = $tweet['id'];
         $nick = $tweet['nick'];
         $status = $tweet['message'];
 
-        preg_match_all("/#(\\w+)/", $status, $matches);
-        $hashtags = [];
-        foreach ($matches[0] as $match) {
-            if (!in_array($match, $hashtags)) {
-                $hashtags []= $match;
-            }
-        }
+        $hashtags = StringUtils::extractHashtags($status);
 
-        $coloured_status = preg_replace(
-            "/(#AyudaAlimentosCoronavirus)/i",
-            "\033[01;31m".'${1}'."\033[0m",
-            $status
-        );
+        $coloured_status = $status;
         foreach ($hashtags as $hashtag) {
             $coloured_status = preg_replace(
-                "/(".$hashtag.")/i",
+                "/(#".$hashtag.")/i",
                 "\033[01;31m".'${1}'."\033[0m",
                 $coloured_status
             );
         }
 
-        $tid = $tweet['id'];
         echo " \033[01;37m@${nick}\033[0m said: \033[01;32m\"${coloured_status}\033[0m\"\n     (\033[38;5;14m\033[4mhttps://twitter.com/${nick}/status/${tid}\033[0m)\n\n";
     }
 }
@@ -116,21 +107,6 @@ function add_tweet($db, $config, $tweet_url) {
 function get_id_from_tweet_url($url) {
     $parts = explode('/', $url);
     return array_pop($parts);
-}
-
-function get_tags_from_text($text) {
-    preg_match_all("/#(\\w+)/", $text, $matches);
-    $hashtags = [];
-    $locations = [];
-    foreach ($matches[0] as $match) {
-        if (!in_array($match, $hashtags)) {
-            $hashtags []= $match;
-            if (strcasecmp($match, "#AyudaAlimentosCoronavirus") != 0) {
-                $locations []= substr($match, 1);
-            }
-        }
-    }
-    return $locations;
 }
 
 function get_tweets($db, $config, $query, $filters) {

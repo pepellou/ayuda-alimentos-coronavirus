@@ -33,7 +33,8 @@ class Message {
         $theMessage->id = $tid;
         $theMessage->nick = $nick;
         $theMessage->text = $text;
-        $theMessage->tags = StringUtils::extractHashtags($text, ['AyudaAlimentosCoronavirus']);
+        // TODO maybe store the array and only implode when converting tweet to array ??
+        $theMessage->tags = implode(',', StringUtils::extractHashtags($text, ['AyudaAlimentosCoronavirus']));
         $theMessage->url = "https://twitter.com/$nick/status/$tid";
         return $theMessage;
     }

@@ -7,7 +7,7 @@ require_once __DIR__.'/../../vendor/autoload.php';
 
 final class StringUtils {
 
-    public static function extractHashtags(string $text, array $blacklist = []) : string
+    public static function extractHashtags(string $text, array $blacklist = []) : array
     {
         preg_match_all("/#(\\w+)/", $text, $matches);
         $locations = [];
@@ -26,7 +26,7 @@ final class StringUtils {
                 }
             }
         }
-        return implode(',', $locations);
+        return $locations;
     }
 
 }

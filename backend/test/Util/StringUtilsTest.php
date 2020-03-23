@@ -10,7 +10,7 @@ final class StringUtilsTest extends TestCase
     public function testExtractHashtags_returnsCommaListOfTags(): void
     {
         $this->assertEquals(
-            'text,couple',
+            [ 'text', 'couple' ],
             StringUtils::extractHashtags('a sample #text with a #couple of hashtags')
         );
     }
@@ -18,7 +18,7 @@ final class StringUtilsTest extends TestCase
     public function testExtractHashtags_returnsNoDuplicates(): void
     {
         $this->assertEquals(
-            'text,couple',
+            [ 'text', 'couple' ],
             StringUtils::extractHashtags('a sample #text with a #couple of hashtags plus a repeated #text one')
         );
     }
@@ -28,14 +28,14 @@ final class StringUtilsTest extends TestCase
         $blacklist = [ 'WITH', 'Hashtags' ];
 
         $this->assertEquals(
-            'text,with,couple,hashtags',
+            [ 'text', 'with', 'couple', 'hashtags' ],
             StringUtils::extractHashtags(
                 'a sample #text #with a #couple of #hashtags plus a repeated #text one'
             )
         );
 
         $this->assertEquals(
-            'text,couple',
+            [ 'text', 'couple' ],
             StringUtils::extractHashtags(
                 'a sample #text #with a #couple of #hashtags plus a repeated #text one',
                 $blacklist
