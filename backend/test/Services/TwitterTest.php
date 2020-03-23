@@ -38,7 +38,7 @@ final class TwitterTest extends TestCase
              ->expects($this->once())
              ->method('buildOauth')
              ->with(
-                 $this->identicalTo('https://api.twitter.com/1.1/statuses/show.json'),
+                 $this->identicalTo(Twitter::$ENDPOINT_SINGLE_TWEET),
                  $this->identicalTo('GET')
              )
              ->willReturn($this->theApi);

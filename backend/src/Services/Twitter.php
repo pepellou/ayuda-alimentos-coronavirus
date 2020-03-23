@@ -12,6 +12,9 @@ class Twitter {
     protected $api = null;
     private $credentials;
 
+    public static $ENDPOINT_SINGLE_TWEET = 'https://api.twitter.com/1.1/statuses/show.json';
+    public static $ENDPOINT_TWEETS       = 'https://api.twitter.com/1.1/search/tweets.json';
+
     public function __construct($credentials) {
         $this->credentials = $credentials;
     }
@@ -28,7 +31,7 @@ class Twitter {
         ;
         return $this->getApi()
             ->setGetfield($getfield)
-            ->buildOauth($url, $requestMethod)
+            ->buildOauth(self::$ENDPOINT_SINGLE_TWEET, $requestMethod)
             ->performRequest();
     }
 
