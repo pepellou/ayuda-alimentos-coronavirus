@@ -25,15 +25,15 @@ class AddTweetCommand implements Command {
             throw new \Exception("\033[01;31mMissing parameter url\033[0m\n");
         }
 
+        $tweet_url = $params[2];
+
         $tweet_id = $this->get_id_from_tweet_url($tweet_url);
 
-        $twitter = new Twitter($config);
-
-        $tweet = json_decode($twitter->getOne($tweet_id));
+        $tweet = json_decode($this->twitter->getOne($tweet_id));
 
         $this->database->addOne(
             'tweets',
-            new Message(
+            Message::fromTweet(
                 $tweet_id,
                 $tweet->user->screen_name,
                 $tweet->full_text
