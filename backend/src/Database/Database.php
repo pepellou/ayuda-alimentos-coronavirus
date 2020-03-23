@@ -14,6 +14,16 @@ class Database {
     protected $firebase = null;
     private $credentials;
 
+    protected static $_instance = null;
+
+    public static function getInstance()
+    {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new Database(__DIR__.'/../../firebase-credentials.json');
+        }
+        return self::$_instance;
+    }
+
     public function __construct($credentials) {
         $this->credentials = $credentials;
     }

@@ -9,7 +9,7 @@ use SosVecinos\Services\Twitter;
 final class TestableTwitter extends Twitter {
 
     public function __construct() {
-        parent::__construct('credentials-of-the-twitter-api-but-not-important-since-its-mocked');
+        parent::__construct();
     }
 
     public function setApi($api) {
