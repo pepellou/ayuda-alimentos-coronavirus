@@ -35,14 +35,13 @@ class CollectTweetsCommand implements Command {
 
         $collected_tweets += $this->get_tweets(
             $query,
-            [ "from" => $query["last"] ]
+            isset($query["last"]) ? [ "from" => $query["last"] ] : []
         );
 
-        $collect_old_tweets = ( !isset($query['collect_old']) || $query['collect_old'] );
-        if ($collect_old_tweets) {
+        if ($this->shouldCollectOldTweets($query)) {
             $collected_tweets += $this->get_tweets(
                 $query,
-                [ "up-to" => $query["first"] ]
+                isset($query["first"]) ? [ "up-to" => $query["first"] ] : []
             );
         }
 
@@ -61,7 +60,7 @@ class CollectTweetsCommand implements Command {
         $tweets = $results->statuses;
 
         if (isset($filters['up-to'])) {
-            if ($tweets[0]->id_str == $filters['up-to']) {
+            if ((count($tweets) > 0) && ($tweets[0]->id_str == $filters['up-to'])) {
                 array_shift($tweets);
             }
         }
@@ -73,32 +72,49 @@ class CollectTweetsCommand implements Command {
         $stored = 0;
 
         foreach($tweets as $tweet) {
-            $message = new Message(
+            $message = Message::fromTweet(
                 $tweet->id_str,
                 $tweet->user->screen_name,
                 $tweet->full_text
             );
 
             if (!$message->isRetweet()) {
-                echo $message->__toString();
-                $db->addOne('tweets', $message);
+                $this->database->addOne('tweets', $message);
                 $stored++;
             }
         }
 
         if (isset($filters['from'])) {
-            $db->getOne("queries", $query['id'])
+            $this->database->getOne("queries", $query['id'])
                ->getChild('last')
                ->set($tweets[0]->id_str);
         }
 
         if (isset($filters['up-to'])) {
-            $db->getOne("queries", $query['id'])
+            $this->database->getOne("queries", $query['id'])
                ->getChild('first')
                ->set($tweets[count($tweets) - 1]->id_str);
         }
 
+        if (!isset($filters['from']) && !isset($filters['up-to'])) {
+            $this->storeBoundary($query['id'], 'last', $tweets[0]->id_str);
+            $this->storeBoundary($query['id'], 'first', $tweets[count($tweets) - 1]->id_str);
+        }
+
         return $stored;
+    }
+
+    private function storeBoundary($id, $key, $value)
+    {
+        $theQuery = $this->database->getOne("queries", $id);
+        $theQueryObj = $theQuery->getValue();
+        $theQueryObj[$key] = $value;
+        $theQuery->set($theQueryObj);
+    }
+
+    private function shouldCollectOldTweets($query)
+    {
+        return ( isset($query['first']) && isset($query['last']) && isset($query['collect_old']) && $query['collect_old'] );
     }
 
 }
