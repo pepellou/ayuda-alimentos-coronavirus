@@ -66,7 +66,7 @@ function collect_from_query($db, $config, $query) {
         $db,
         $config,
         $query,
-        [ "since" => $query["last"] ]
+        [ "from" => $query["last"] ]
     );
 
     $collect_old_tweets = ( !isset($query['collect_old']) || $query['collect_old'] );
@@ -75,7 +75,7 @@ function collect_from_query($db, $config, $query) {
             $db,
             $config,
             $query,
-            [ "until" => $query["first"] ]
+            [ "up-to" => $query["first"] ]
         );
     }
 
@@ -133,15 +133,8 @@ function get_tags_from_text($text) {
     return $locations;
 }
 
-function get_tweets($db, $config, $query, $options) {
+function get_tweets($db, $config, $query, $filters) {
     $twitter = new Twitter($config);
-    $filters = [];
-    if (isset($options['since'])) {
-        $filters['from'] = $options['since'];
-    }
-    if (isset($options['until'])) {
-        $filters['up-to'] []= $options['until'];
-    }
 
     $results = json_decode(
         $twitter->get($query['query'], $filters)
@@ -149,8 +142,8 @@ function get_tweets($db, $config, $query, $options) {
 
     $tweets = $results->statuses;
 
-    if (isset($options['until'])) {
-        if ($tweets[0]->id_str == $options['until']) {
+    if (isset($filters['up-to'])) {
+        if ($tweets[0]->id_str == $filters['up-to']) {
             array_shift($tweets);
         }
     }
@@ -178,13 +171,13 @@ function get_tweets($db, $config, $query, $options) {
         }
     }
 
-    if (isset($options['since'])) {
+    if (isset($filters['from'])) {
         $db->getOne("queries", $query['id'])
            ->getChild('last')
            ->set($tweets[0]->id_str);
     }
 
-    if (isset($options['until'])) {
+    if (isset($filters['up-to'])) {
         $db->getOne("queries", $query['id'])
            ->getChild('first')
            ->set($tweets[count($tweets) - 1]->id_str);
