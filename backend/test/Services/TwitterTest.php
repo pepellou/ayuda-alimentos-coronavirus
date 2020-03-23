@@ -59,10 +59,10 @@ final class TwitterTest extends TestCase
         $aSampleJson = '{"foo":"bar"}';
         $theQuery = 'a-sample-query';
         $expectedQuery =
-            "?q=${theQuery}&count=100&tweet_mode=extended";
+            "?q=${theQuery}&result_type=recent&count=100&tweet_mode=extended";
 
         $this->expectTheApiToHaveBeenCalledWith([
-            'query' => "?q=${theQuery}&count=100&tweet_mode=extended",
+            'query' => $expectedQuery,
             'endpoint' => Twitter::$ENDPOINT_TWEETS
         ])->andReturn($aSampleJson);
 
@@ -79,7 +79,7 @@ final class TwitterTest extends TestCase
         $theFirstTweetId = 'a-tweet-id';
 
         $this->expectTheApiToHaveBeenCalledWith([
-            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&count=100&tweet_mode=extended",
+            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&result_type=recent&count=100&tweet_mode=extended",
             'endpoint' => Twitter::$ENDPOINT_TWEETS
         ])->andReturn($aSampleJson);
 
@@ -99,7 +99,7 @@ final class TwitterTest extends TestCase
         $theLastTweetId = 'a-tweet-id';
 
         $this->expectTheApiToHaveBeenCalledWith([
-            'query' => "?q=${theQuery}&max_id=${theLastTweetId}&count=100&tweet_mode=extended",
+            'query' => "?q=${theQuery}&max_id=${theLastTweetId}&result_type=recent&count=100&tweet_mode=extended",
             'endpoint' => Twitter::$ENDPOINT_TWEETS
         ])->andReturn($aSampleJson);
 
@@ -120,7 +120,7 @@ final class TwitterTest extends TestCase
         $theLastTweetId = 'another-tweet-id';
 
         $this->expectTheApiToHaveBeenCalledWith([
-            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&max_id=${theLastTweetId}&count=100&tweet_mode=extended",
+            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&max_id=${theLastTweetId}&result_type=recent&count=100&tweet_mode=extended",
             'endpoint' => Twitter::$ENDPOINT_TWEETS
         ])->andReturn($aSampleJson);
 

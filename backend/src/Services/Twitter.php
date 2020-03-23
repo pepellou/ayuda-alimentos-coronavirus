@@ -42,7 +42,7 @@ class Twitter {
         if (isset($filters['up-to'])) {
             $query .= '&max_id=' . $filters['up-to'];
         }
-        $query .= '&count=100&tweet_mode=extended';
+        $query .= '&result_type=recent&count=100&tweet_mode=extended';
         return $this->getApi()
             ->setGetfield('?q=' . $query )
             ->buildOauth(self::$ENDPOINT_TWEETS, 'GET')
