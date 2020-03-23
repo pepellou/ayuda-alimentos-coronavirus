@@ -37,19 +37,10 @@ function show_db($db, $config) {
 }
 
 function show_last_tweets($config) {
-    $url = 'https://api.twitter.com/1.1/search/tweets.json';
-    $getfield = '?q=%23ayudaalimentoscoronavirus&count=100&tweet_mode=extended';
-    $requestMethod = 'GET';
-
-    $twitter = new TwitterAPIExchange(array(
-        'oauth_access_token' => $config['oauth']['access_token'],
-        'oauth_access_token_secret' => $config['oauth']['access_token_secret'],
-        'consumer_key' => $config['oauth']['consumer_key'],
-        'consumer_secret' => $config['oauth']['consumer_secret']
-    ));
-    $results = json_decode($twitter->setGetfield($getfield)
-        ->buildOauth($url, $requestMethod)
-        ->performRequest());
+    $twitter = new Twitter($config);
+    $results = json_decode(
+        $twitter->get("%23ayudaalimentoscoronavirus")
+    );
 
     foreach($results->statuses as $tweet) {
         $nick = $tweet->user->screen_name;
@@ -143,31 +134,18 @@ function get_tags_from_text($text) {
 }
 
 function get_tweets($db, $config, $query, $options) {
-    $url = 'https://api.twitter.com/1.1/search/tweets.json';
-
-    $getfield = '?q=' . $query['query']
-        . '&count=100'
-        . '&tweet_mode=extended';
-
+    $twitter = new Twitter($config);
+    $filters = [];
     if (isset($options['since'])) {
-        $getfield .= '&since_id=' . $options['since'];
+        $filters['from'] = $options['since'];
     }
-
     if (isset($options['until'])) {
-        $getfield .= '&max_id=' . $options['until'];
+        $filters['up-to'] []= $options['until'];
     }
 
-    $requestMethod = 'GET';
-
-    $twitter = new TwitterAPIExchange(array(
-        'oauth_access_token' => $config['oauth']['access_token'],
-        'oauth_access_token_secret' => $config['oauth']['access_token_secret'],
-        'consumer_key' => $config['oauth']['consumer_key'],
-        'consumer_secret' => $config['oauth']['consumer_secret']
-    ));
-    $results = json_decode($twitter->setGetfield($getfield)
-        ->buildOauth($url, $requestMethod)
-        ->performRequest());
+    $results = json_decode(
+        $twitter->get($query['query'], $filters)
+    );
 
     $tweets = $results->statuses;
 

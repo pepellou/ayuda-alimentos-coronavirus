@@ -22,7 +22,6 @@ class Twitter {
     public function getOne($id)
     {
         $url = 'https://api.twitter.com/1.1/statuses/show.json';
-        $requestMethod = 'GET';
         $getfield = '?id=' . $id
             .'&include_my_retweet=false'
             .'&include_ext_alt_text=false'
@@ -31,7 +30,22 @@ class Twitter {
         ;
         return $this->getApi()
             ->setGetfield($getfield)
-            ->buildOauth(self::$ENDPOINT_SINGLE_TWEET, $requestMethod)
+            ->buildOauth(self::$ENDPOINT_SINGLE_TWEET, 'GET')
+            ->performRequest();
+    }
+
+    public function get($query, $filters = [])
+    {
+        if (isset($filters['from'])) {
+            $query .= '&since_id=' . $filters['from'];
+        }
+        if (isset($filters['up-to'])) {
+            $query .= '&max_id=' . $filters['up-to'];
+        }
+        $query .= '&count=100&tweet_mode=extended';
+        return $this->getApi()
+            ->setGetfield('?q=' . $query )
+            ->buildOauth(self::$ENDPOINT_TWEETS, 'GET')
             ->performRequest();
     }
 

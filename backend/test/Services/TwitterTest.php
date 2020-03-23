@@ -54,6 +54,85 @@ final class TwitterTest extends TestCase
         );
     }
 
+    public function testGet_returnsListOfTweets(): void
+    {
+        $aSampleJson = '{"foo":"bar"}';
+        $theQuery = 'a-sample-query';
+        $expectedQuery =
+            "?q=${theQuery}&count=100&tweet_mode=extended";
+
+        $this->expectTheApiToHaveBeenCalledWith([
+            'query' => "?q=${theQuery}&count=100&tweet_mode=extended",
+            'endpoint' => Twitter::$ENDPOINT_TWEETS
+        ])->andReturn($aSampleJson);
+
+        $this->assertEquals(
+            $aSampleJson,
+            $this->theTwitter->get($theQuery)
+        );
+    }
+
+    public function testGet_canFilterByFrom(): void
+    {
+        $aSampleJson = '{"foo":"bar"}';
+        $theQuery = 'a-sample-query';
+        $theFirstTweetId = 'a-tweet-id';
+
+        $this->expectTheApiToHaveBeenCalledWith([
+            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&count=100&tweet_mode=extended",
+            'endpoint' => Twitter::$ENDPOINT_TWEETS
+        ])->andReturn($aSampleJson);
+
+        $this->assertEquals(
+            $aSampleJson,
+            $this->theTwitter->get(
+                $theQuery,
+                [ 'from' => $theFirstTweetId ]
+            )
+        );
+    }
+
+    public function testGet_canFilterByUpTo(): void
+    {
+        $aSampleJson = '{"foo":"bar"}';
+        $theQuery = 'a-sample-query';
+        $theLastTweetId = 'a-tweet-id';
+
+        $this->expectTheApiToHaveBeenCalledWith([
+            'query' => "?q=${theQuery}&max_id=${theLastTweetId}&count=100&tweet_mode=extended",
+            'endpoint' => Twitter::$ENDPOINT_TWEETS
+        ])->andReturn($aSampleJson);
+
+        $this->assertEquals(
+            $aSampleJson,
+            $this->theTwitter->get(
+                $theQuery,
+                [ 'up-to' => $theLastTweetId ]
+            )
+        );
+    }
+
+    public function testGet_canFilterByBothFromAndUpTo(): void
+    {
+        $aSampleJson = '{"foo":"bar"}';
+        $theQuery = 'a-sample-query';
+        $theFirstTweetId = 'a-tweet-id';
+        $theLastTweetId = 'another-tweet-id';
+
+        $this->expectTheApiToHaveBeenCalledWith([
+            'query' => "?q=${theQuery}&since_id=${theFirstTweetId}&max_id=${theLastTweetId}&count=100&tweet_mode=extended",
+            'endpoint' => Twitter::$ENDPOINT_TWEETS
+        ])->andReturn($aSampleJson);
+
+        $this->assertEquals(
+            $aSampleJson,
+            $this->theTwitter->get(
+                $theQuery,
+                [ 'from' => $theFirstTweetId, 'up-to' => $theLastTweetId ]
+            )
+        );
+    }
+
     public function setUp() : void
     {
         $this->theTwitter = new TestableTwitter();
@@ -61,6 +140,34 @@ final class TwitterTest extends TestCase
         $this->theApi = $this->createMock(TwitterAPIExchange::class);
 
         $this->theTwitter->setApi($this->theApi);
+    }
+
+    private function expectTheApiToHaveBeenCalledWith($expectations)
+    {
+        $this->theApi
+             ->expects($this->once())
+             ->method('setGetfield')
+             ->with($this->identicalTo($expectations['query']))
+             ->willReturn($this->theApi);
+
+        $this->theApi
+             ->expects($this->once())
+             ->method('buildOauth')
+             ->with(
+                 $this->identicalTo($expectations['endpoint']),
+                 $this->identicalTo('GET')
+             )
+             ->willReturn($this->theApi);
+
+        return $this;
+    }
+
+    private function andReturn($toReturn)
+    {
+        $this->theApi
+             ->expects($this->once())
+             ->method('performRequest')
+             ->willReturn($toReturn);
     }
 
 }
