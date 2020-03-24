@@ -30,7 +30,7 @@
 1) Crea el archivo de configuración copiando de config.php.ini:
 
 ```bash
-    cd php
+    cd backend
     cp config.php.ini config.php
 ```
 
@@ -41,20 +41,20 @@
 3) Actualiza las dependencias:
 
 ```bash
-    cd php
+    cd backend
     composer install
 ```
 
 4) Comprueba que puedes consultar los últimos tweets:
 
 ```bash
-    php php/run.php last
+    php backend/run.php last
 ```
 
 5) Configura firebase copiando el archivo firebase-credentials.json.ini:
 
 ```bash
-    cd php
+    cd backend
     cp firebase-credentials.json.ini firebase-credentials.json
 ```
 
@@ -65,7 +65,7 @@
 7) Comprueba que puedes recolectar tweets:
 
 ```bash
-    php php/run.php collect
+    php backend/run.php collect
 ```
 
 ## Instalación local con Docker
@@ -74,7 +74,7 @@
 
 - docker 19+
 - docker-compose 1.25+
-- Configurar `php/config.php` y `php/firebase-credentials.json` como se especifica en la sección anterior
+- Configurar `backend/config.php` y `backend/firebase-credentials.json` como se especifica en la sección anterior
 
 ### Comandos
 

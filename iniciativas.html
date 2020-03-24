@@ -8,6 +8,9 @@
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </head>
     <body>
         <h1>¿De dónde sacamos la información?</h1>
@@ -19,32 +22,28 @@
             Esta web simplemente visibiliza de una forma que creemos útil la información
             que se genera a partir de diversas iniciativas solidarias:
         </p>
-        <ul>
-            <li><a href="#ayuda-alimentos-coronavirus-hashtag">#AyudaAlimentosCoronavirus</a></li>
-        </ul>
 
-        <p>&nbsp;</p>
+        <table id="origins" class="table table-stripped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Red social</th>
+                    <th>Cadena de búsqueda</th>
+                    <th>Mensajes recopilados</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>*</td>
+                    <td>(introducido manualmente)</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
 
-        <h3 id="ayuda-alimentos-coronavirus-hashtag">#AyudaAlimentosCoronavirus</h3>
-        <blockquote class="twitter-tweet">
-            <p lang="es" dir="ltr">
-                Poned hashtag para organizarnos. Uno con ciudad o pueblo donde vivís.
-                Otro con vuestro barrio o zona. Y para poder centralizar, usemos el mismo hashtag tipo
-                <a href="https://twitter.com/hashtag/AyudaAlimentosCoronavirus?src=hash&amp;ref_src=twsrc%5Etfw">#AyudaAlimentosCoronavirus</a>.
-                <br>
-                Ej: <br>
-                Somos _ en casa y nos han despedido. Vivimos en
-                <a href="https://twitter.com/hashtag/Madrid?src=hash&amp;ref_src=twsrc%5Etfw">#Madrid</a>
-                <a href="https://twitter.com/hashtag/Chueca?src=hash&amp;ref_src=twsrc%5Etfw">#Chueca</a>
-                <a href="https://twitter.com/hashtag/AyudaAlimentosCoronavirus?src=hash&amp;ref_src=twsrc%5Etfw">#AyudaAlimentosCoronavirus</a>
-            </p>
-            &mdash; Raquel Sastre (@raquelsastrecom) <a href="https://twitter.com/raquelsastrecom/status/1238595551047954432?ref_src=twsrc%5Etfw">March 13, 2020</a>
-        </blockquote>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        <p>
-            Participa de esta iniciativa
-            <a href="https://twitter.com/intent/tweet?text=Hola%2C%20vivo%20en%20%23Ciudad%20%23Barrio%20y%20ofrezco%2Fnecesito%20%23AyudaAlimentosCoronavirus" target="_blank">tuiteando con el hashtag</a>.
-        </p>
+        <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/iniciativas.js"></script>
     </body>
 </html>
 
