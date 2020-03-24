@@ -17,6 +17,7 @@ $(function() {
             var tweet = tweets[id];
             var link = get_link(tweet);
             var tags = tweet.tags != undefined && tweet.tags != '' ? tweet.tags.split(',') : [];
+            var origin = tweet.origin != undefined ? tweet.origin : '';
             var tags_cell = '';
             for (var i in tags) {
                 var tag = tags[i];
@@ -24,7 +25,7 @@ $(function() {
             }
             var table = (tweet.gps != undefined) ? tableOfProcessedMessages : tableOfMessagesToProcess;
             table.prepend(
-                '<tr><td>'
+                '<tr class="filter-by-origin origin-all origin-' + origin + '"><td>'
                     + tags_cell
                     + '</td><td>'
                     + tweet.message
@@ -104,4 +105,20 @@ $(function() {
         database.ref('tweets').push(tweet);
         $('#new-modal').modal('hide');
     });
+
+    database.ref('queries').on('value', function(snapshot) {
+        var queries = snapshot.val();
+        for (var id in queries) {
+            var query = queries[id];
+            $('#filterByOrigin > div.dropdown-menu').append(
+                '<a data-query="' + id + '" class="dropdown-item" href="#">' + query.query + '</a>'
+            );
+        }
+        $('#filterByOrigin > div.dropdown-menu a.dropdown-item').on('click', function() {
+            $('#filterByOrigin button').html('Origen: ' + $(this).html());
+            $('.filter-by-origin').hide();
+            $('.origin-' + $(this).data('query')).show();
+        });
+    });
+
 });

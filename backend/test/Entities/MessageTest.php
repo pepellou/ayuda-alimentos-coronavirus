@@ -11,11 +11,12 @@ final class MessageTest extends TestCase
     public function testToArray_returnsArrayOfFields(): void
     {
         $theMessage = new Message();
-        $theMessage->id   = $this->anyString();
-        $theMessage->nick = $this->anyString();
-        $theMessage->text = $this->anyString();
-        $theMessage->tags = $this->anyString();
-        $theMessage->url  = $this->anyString();
+        $theMessage->id     = $this->anyString();
+        $theMessage->nick   = $this->anyString();
+        $theMessage->text   = $this->anyString();
+        $theMessage->tags   = $this->anyString();
+        $theMessage->url    = $this->anyString();
+        $theMessage->origin = $this->anyString();
 
         $this->assertEquals(
             [
@@ -23,7 +24,8 @@ final class MessageTest extends TestCase
                 'nick'    => $theMessage->nick,
                 'message' => $theMessage->text,
                 'tags'    => $theMessage->tags,
-                'url'     => $theMessage->url
+                'url'     => $theMessage->url,
+                'origin'  => $theMessage->origin
             ],
             $theMessage->toArray()
         );

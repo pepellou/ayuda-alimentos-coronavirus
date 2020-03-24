@@ -14,6 +14,7 @@ class Message {
     public $text;
     public $tags;
     public $url;
+    public $origin;
 
     public function __construct() {
     }
@@ -30,7 +31,8 @@ class Message {
             'nick'    => $this->nick,
             'message' => $this->text,
             'tags'    => $this->tags,
-            'url'     => $this->url
+            'url'     => $this->url,
+            'origin'  => $this->origin
         ];
     }
 

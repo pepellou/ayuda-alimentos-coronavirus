@@ -77,6 +77,7 @@ class CollectTweetsCommand implements Command {
                 $tweet->user->screen_name,
                 $tweet->full_text
             );
+            $message->origin = $query['id'];
 
             if (!$message->isRetweet()) {
                 $this->database->addOne('tweets', $message);
