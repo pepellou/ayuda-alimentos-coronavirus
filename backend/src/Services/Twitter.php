@@ -16,7 +16,8 @@ class Twitter {
     public static $ENDPOINT_TWEETS       = 'https://api.twitter.com/1.1/search/tweets.json';
 
     public function __construct() {
-        $this->credentials = require __DIR__ . '/../../config.php';
+        $config = require __DIR__ . '/../../config.php';
+        $this->credentials = $config['twitter'];
     }
 
     public function getOne($id)
