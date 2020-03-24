@@ -5,6 +5,7 @@
 <p align="center"><a href="http://sosvecinos.org">http://sosvecinos.org</a></p>
 
 ![Backend Tests](https://github.com/pepellou/ayuda-alimentos-coronavirus/workflows/Backend%20Tests/badge.svg)
+![Frontend Tests](https://github.com/pepellou/ayuda-alimentos-coronavirus/workflows/Frontend%20Tests/badge.svg)
 
 # Tabla de Contenidos
 

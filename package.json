@@ -1,0 +1,26 @@
+{
+  "name": "AyudaAlimentosCoronavirus",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\">sosvecinos.org</h1>",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pepellou/ayuda-alimentos-coronavirus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pepellou/ayuda-alimentos-coronavirus/issues"
+  },
+  "homepage": "https://github.com/pepellou/ayuda-alimentos-coronavirus#readme",
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}
