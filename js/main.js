@@ -34,20 +34,6 @@ var fill_table_with_all_tweets = function(tweets) {
     }
 };
 
-var init_firebase = function() {
-    var firebaseConfig = {
-        apiKey: "AIzaSyCNCfCoMnJMx7ncX6An3zCQc4TWsK60300",
-        authDomain: "ayuda-alimentos-coronavirus.firebaseapp.com",
-        databaseURL: "https://ayuda-alimentos-coronavirus.firebaseio.com",
-        projectId: "ayuda-alimentos-coronavirus",
-        storageBucket: "ayuda-alimentos-coronavirus.appspot.com",
-        messagingSenderId: "622677547690",
-        appId: "1:622677547690:web:0a04757a7c6ab63dacced3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-};
-
 var no_gps_info = function(tweet) {
   return tweet.gps == undefined && tweet.gps2 == undefined;
 };
@@ -67,7 +53,7 @@ var init_table_filter = function() {
 
 
 $(function() {
-    init_firebase();
+    firebase.initializeApp(firebaseConfig);
 
     firebase.database().ref('tweets').on('value', function(snapshot) {
         fill_table_with_all_tweets(snapshot.val());
