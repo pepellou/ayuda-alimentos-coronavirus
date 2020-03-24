@@ -29,7 +29,7 @@ class CollectTweetsCommand implements Command {
 
     private function collect_from_query($query)
     {
-        echo " Collecting tweets with query '" . $query['query'] . "'...\n";
+        echo "Collecting tweets with query '" . $query['query'] . "'...\n";
 
         $collected_tweets = 0;
 
@@ -46,9 +46,9 @@ class CollectTweetsCommand implements Command {
         }
 
         if ($collected_tweets == 0) {
-            echo "\n   No new tweets collected\n";
+            echo "   No new tweets collected\n\n";
         } else {
-            echo "\n   Tweets collected: $collected_tweets\n";
+            echo "   Tweets collected: $collected_tweets\n\n";
         }
     }
 
