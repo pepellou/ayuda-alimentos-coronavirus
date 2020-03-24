@@ -10,14 +10,11 @@ use \TwitterAPIExchange;
 class Twitter {
 
     protected $api = null;
-    private $credentials;
 
     public static $ENDPOINT_SINGLE_TWEET = 'https://api.twitter.com/1.1/statuses/show.json';
     public static $ENDPOINT_TWEETS       = 'https://api.twitter.com/1.1/search/tweets.json';
 
     public function __construct() {
-        $config = require __DIR__ . '/../../config.php';
-        $this->credentials = $config['twitter'];
     }
 
     public function getOne($id)
@@ -58,11 +55,12 @@ class Twitter {
     }
 
     private function createApi() {
+        $config = require __DIR__ . '/../../config.php';
         return new TwitterAPIExchange([
-            'oauth_access_token'        => $this->credentials['oauth']['access_token'],
-            'oauth_access_token_secret' => $this->credentials['oauth']['access_token_secret'],
-            'consumer_key'              => $this->credentials['oauth']['consumer_key'],
-            'consumer_secret'           => $this->credentials['oauth']['consumer_secret']
+            'oauth_access_token'        => $config['twitter']['oauth']['access_token'],
+            'oauth_access_token_secret' => $config['twitter']['oauth']['access_token_secret'],
+            'consumer_key'              => $config['twitter']['oauth']['consumer_key'],
+            'consumer_secret'           => $config['twitter']['oauth']['consumer_secret']
         ]);
     }
 
