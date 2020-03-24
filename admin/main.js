@@ -97,7 +97,8 @@ $(function() {
             message: $('#new-modal-message').val(),
             tags: $('#new-modal-hashtags').val(),
             type: $('#new-modal-volunteer').is(':checked') ? 'volunteer' : 'needHelp',
-            url: $('#new-modal-url').val()
+            url: $('#new-modal-url').val(),
+            origin: 'manual'
         };
         if (lat != '' && lon != '') {
             tweet.gps = { lat: lat, lon: lon };
