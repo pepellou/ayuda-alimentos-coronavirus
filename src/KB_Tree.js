@@ -11,12 +11,16 @@ var KB_Tree = function(options) {
 
     this.count = function() {
         return this._count;
-    }
+    };
 
     this.insert = function(point) {
         this._count++;
         this.root.insert(point);
-    }
+    };
+
+    this.print = function() {
+        return this.root.print().join('\n');
+    };
 
     return this.init();
 };
@@ -29,8 +33,13 @@ KB_Tree.Page = function(options) {
 
     this.insert = function(point) {
         if (this.children.length == this._pagesize) {
-            this.type = KB_Tree.Page.RegionPage;
-            this.splitAndAdd(point);
+            if (this.type == KB_Tree.Page.PointsPage) {
+                this.type = KB_Tree.Page.RegionPage;
+                this.splitAndAdd(point);
+            } else {
+                // TODO select child according to current dimension
+                this.children[0].insert(point);
+            }
         } else {
             this.children.push(point);
         }
@@ -73,6 +82,47 @@ KB_Tree.Page = function(options) {
         newChildren[1].insert(point);
 
         this.children = newChildren;
+    };
+
+    this.print = function() {
+        var parts = [];
+        parts.push(
+            '['
+            + ((this.type == KB_Tree.Page.PointsPage) ? 'POINTS' : 'REGION' )
+            + ' (max: ' + this._pagesize + ')] - boundaries: ['
+            + this.boundaries.x[0] + ', '
+            + this.boundaries.x[1] + '] x ['
+            + this.boundaries.y[0] + ', '
+            + this.boundaries.y[1] + ']'
+        );
+        if (this.type == KB_Tree.Page.PointsPage) {
+            parts.push('|');
+            var line_points = '+----{ ';
+            var first = true;
+            for (var i = 0; i < this.children.length; i++) {
+                var the_point = this.children[i];
+                if (!first) {
+                    line_points += ', ';
+                }
+                line_points += '(' + the_point.x + ', ' + the_point.y + ')';
+                first = false;
+            }
+            parts.push(line_points + ' }');
+        } else {
+            var left_lines = this.children[0].print();
+            var right_lines = this.children[1].print();
+            parts.push('|');
+            parts.push('|----' + left_lines.shift());
+            left_lines.forEach(function(line) {
+                parts.push('|    ' + line);
+            });
+            parts.push('|');
+            parts.push('+----' + right_lines.shift());
+            right_lines.forEach(function(line) {
+                parts.push('     ' + line);
+            });
+        }
+        return parts;
     };
 
     return this;

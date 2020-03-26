@@ -136,6 +136,109 @@ describe('KB_Tree.Page', function() {
                 });
             });
 
+            it('should support the addition of new points', function() {
+                thePage.insert({ x: 9, y: 9 });
+                thePage.insert({ x: 99, y: 99 });
+
+                expect(thePage.children[0].children).to.eql([
+                    { x: 1, y: 2 },
+                    { x: 99, y: 99 }
+                ]);
+
+                expect(thePage.children[1].children).to.eql([
+                    { x: 0, y: 4 },
+                    { x: 9, y: 9 }
+                ]);
+
+            });
+
+        });
+
+    });
+
+    describe('#print()', function() {
+
+        it('should print a simple points page', function() {
+            theTree.insert({ x: 3, y: 6 });
+            theTree.insert({ x: 2, y: 7 });
+            theTree.insert({ x: 17, y: 15 });
+            theTree.insert({ x: 6, y: 12 });
+
+            expect(theTree.print()).to.eql([
+                '[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
+                '|',
+                '+----{ (3, 6), (2, 7), (17, 15), (6, 12) }',
+            ].join('\n'));
+        });
+
+        it('should print a tree with nested pages', function() {
+            theTree.insert({ x: 3, y: 6 });
+            theTree.insert({ x: 2, y: 7 });
+            theTree.insert({ x: 17, y: 15 });
+            theTree.insert({ x: 6, y: 12 });
+            theTree.insert({ x: 13, y: 15 });
+            theTree.insert({ x: 9, y: 1 });
+            theTree.insert({ x: 10, y: 19 });
+            theTree.insert({ x: 16, y: 8 });
+
+            expect(theTree.print()).to.eql([
+                '[REGION (max: 7)] - boundaries: [2, 17] x [1, 19]',
+                '|',
+                '|----[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
+                '|    |',
+                '|    +----{ (3, 6), (2, 7), (17, 15), (6, 12) }',
+                '|',
+                '+----[POINTS (max: 7)] - boundaries: [9, 16] x [1, 19]',
+                '     |',
+                '     +----{ (13, 15), (9, 1), (10, 19), (16, 8) }',
+            ].join('\n'));
+        });
+
+        it('should print a tree with several levels of nesting', function() {
+            theTree = new KB_Tree({
+                pagesize: 2
+            });
+
+            theTree.insert({ x: 3, y: 6 });
+            theTree.insert({ x: 2, y: 7 });
+            theTree.insert({ x: 17, y: 15 });
+            theTree.insert({ x: 6, y: 12 });
+            theTree.insert({ x: 13, y: 15 });
+            theTree.insert({ x: 9, y: 1 });
+            theTree.insert({ x: 10, y: 19 });
+            theTree.insert({ x: 16, y: 8 });
+
+            expect(theTree.print()).to.eql([
+                '[REGION (max: 2)] - boundaries: [2, 17] x [1, 19]',
+                '|',
+                '|----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19]',
+                '|    |',
+                '|    |----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19]',
+                '|    |    |',
+                '|    |    |----[POINTS (max: 2)] - boundaries: [3, 16] x [6, 8]',
+                '|    |    |    |',
+                '|    |    |    +----{ (3, 6), (16, 8) }',
+                '|    |    |',
+                '|    |    +----[POINTS (max: 2)] - boundaries: [9, 10] x [1, 19]',
+                '|    |         |',
+                '|    |         +----{ (9, 1), (10, 19) }',
+                '|    |',
+                '|    +----[POINTS (max: 2)] - boundaries: [6, 13] x [12, 15]',
+                '|         |',
+                '|         +----{ (6, 12), (13, 15) }',
+                '|',
+                '+----[POINTS (max: 2)] - boundaries: [2, 17] x [7, 15]',
+                '     |',
+                '     +----{ (2, 7), (17, 15) }'
+            ].join('\n'));
+        });
+
+        let theTree;
+
+        beforeEach(function() {
+            theTree = new KB_Tree({
+                pagesize: PAGE_SIZE
+            });
         });
 
     });
