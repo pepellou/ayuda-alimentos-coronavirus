@@ -13,7 +13,7 @@ describe('KB_Tree', function() {
             expect(theTree.count()).to.be(0);
         });
 
-        it('should contain an empty root page of type PointsPage and split_type horizontal', function() {
+        it('should contain an empty root page of type PointsPage and splitType horizontal', function() {
             var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
 
             expect(theTree.root).not.to.be(undefined);
@@ -91,6 +91,22 @@ describe('KB_Tree.Page', function() {
 
             expect(thePage.children.length).to.be(1);
             expect(thePage.children[0]).to.be(aPoint);
+        });
+
+        it('should keep the points sorted (according to split type) in the children array', function() {
+            var thePage = new KB_Tree.Page({ pagesize: PAGE_SIZE, splitType: KB_Tree.SplitType.HORIZONTAL });
+
+            thePage.insert({ x: 1, y: 2 });
+            thePage.insert({ x: -3, y: 5 });
+            thePage.insert({ x: 3, y: 0 });
+            thePage.insert({ x: 7, y: 6 });
+
+            expect(thePage.children).to.eql([
+                { x: 3, y: 0 },
+                { x: 1, y: 2 },
+                { x: -3, y: 5 },
+                { x: 7, y: 6 }
+            ]);
         });
 
         it('should update the boundaries of the page', function() {
@@ -205,7 +221,7 @@ describe('KB_Tree.Page', function() {
             expect(theTree.print()).to.eql([
                 '[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
                 '|',
-                '+----{ (3, 6), (2, 7), (17, 15), (6, 12) }',
+                '+----{ (3, 6), (2, 7), (6, 12), (17, 15) }',
             ].join('\n'));
         });
 
@@ -222,13 +238,13 @@ describe('KB_Tree.Page', function() {
             expect(theTree.print()).to.eql([
                 '[REGION (max: 7)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
-                '|----[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
+                '|----[POINTS (max: 7)] - boundaries: [2, 9] x [1, 12]',
                 '|    |',
-                '|    +----{ (3, 6), (2, 7), (17, 15), (6, 12) }',
+                '|    +----{ (9, 1), (3, 6), (2, 7), (6, 12) }',
                 '|',
-                '+----[POINTS (max: 7)] - boundaries: [9, 16] x [1, 19]',
+                '+----[POINTS (max: 7)] - boundaries: [10, 17] x [8, 19]',
                 '     |',
-                '     +----{ (13, 15), (9, 1), (10, 19), (16, 8) }',
+                '     +----{ (16, 8), (17, 15), (13, 15), (10, 19) }',
             ].join('\n'));
         });
 
@@ -253,13 +269,13 @@ describe('KB_Tree.Page', function() {
                 '|    |',
                 '|    |----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19] - split: HORIZONTAL',
                 '|    |    |',
-                '|    |    |----[POINTS (max: 2)] - boundaries: [3, 16] x [6, 8]',
+                '|    |    |----[POINTS (max: 2)] - boundaries: [9, 16] x [1, 8]',
                 '|    |    |    |',
-                '|    |    |    +----{ (3, 6), (16, 8) }',
+                '|    |    |    +----{ (9, 1), (16, 8) }',
                 '|    |    |',
-                '|    |    +----[POINTS (max: 2)] - boundaries: [9, 10] x [1, 19]',
+                '|    |    +----[POINTS (max: 2)] - boundaries: [3, 10] x [6, 19]',
                 '|    |         |',
-                '|    |         +----{ (9, 1), (10, 19) }',
+                '|    |         +----{ (3, 6), (10, 19) }',
                 '|    |',
                 '|    +----[POINTS (max: 2)] - boundaries: [6, 13] x [12, 15]',
                 '|         |',

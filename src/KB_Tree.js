@@ -44,6 +44,7 @@ KB_Tree.Page = function(options) {
             }
         } else {
             this.children.push(point);
+            this.children.sort((p1, p2) => p1.y - p2.y);
         }
         this._updateBoundaries(point);
     };
