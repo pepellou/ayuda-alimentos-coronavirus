@@ -5,6 +5,25 @@ const PAGE_SIZE = 7;
 
 describe('KB_Tree', function() {
 
+    describe('#__construct()', function() {
+
+        it('should not contain any points', function() {
+            var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
+
+            expect(theTree.count()).to.be(0);
+        });
+
+        it('should contain an empty root page of type PointsPage and split_type horizontal', function() {
+            var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
+
+            expect(theTree.root).not.to.be(undefined);
+            expect(theTree.root.type).to.be(KB_Tree.PageType.PointsPage);
+            expect(theTree.root.children.length).to.be(0);
+            expect(theTree.root.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+        });
+
+    });
+
     describe('#insert()', function() {
 
         it('should add point to the tree', function() {
@@ -21,13 +40,13 @@ describe('KB_Tree', function() {
 
         it('should create a region when count > page size', function() {
             for (var i = 0; i < PAGE_SIZE; i++) {
-                expect(theTree.root.type).to.be(KB_Tree.Page.PointsPage);
+                expect(theTree.root.type).to.be(KB_Tree.PageType.PointsPage);
                 theTree.insert({ x: i, y: i });
             }
 
             theTree.insert({ x: 99, y: 99 });
 
-            expect(theTree.root.type).to.be(KB_Tree.Page.RegionPage);
+            expect(theTree.root.type).to.be(KB_Tree.PageType.RegionPage);
             expect(theTree.root.children.length).to.be(2);
         });
 
@@ -52,6 +71,12 @@ describe('KB_Tree.Page', function() {
             var thePage = new KB_Tree.Page();
 
             expect(thePage.children.length).to.be(0);
+        });
+
+        it('should have a default split type horizontal', function() {
+            var thePage = new KB_Tree.Page();
+
+            expect(thePage.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
         });
 
     });
@@ -99,22 +124,35 @@ describe('KB_Tree.Page', function() {
             });
 
             it('should convert from PointsPage into RegionPage', function() {
-                expect(thePage.type).to.be(KB_Tree.Page.PointsPage);
+                expect(thePage.type).to.be(KB_Tree.PageType.PointsPage);
 
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.type).to.be(KB_Tree.Page.RegionPage);
+                expect(thePage.type).to.be(KB_Tree.PageType.RegionPage);
             });
 
             it('should have 2 PointsPage as children', function() {
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.children[0].type).to.be(KB_Tree.Page.PointsPage);
-                expect(thePage.children[1].type).to.be(KB_Tree.Page.PointsPage);
+                expect(thePage.children[0].type).to.be(KB_Tree.PageType.PointsPage);
+                expect(thePage.children[1].type).to.be(KB_Tree.PageType.PointsPage);
                 expect(
                     thePage.children[0].children.length +
                     thePage.children[1].children.length
                 ).to.be(thePage._pagesize + 1);
+            });
+
+            it('should keep switching split type', function() {
+                expect(thePage.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+
+                thePage.insert({ x: 9, y: 9 });
+
+                expect(thePage.children[0].splitType).to.be(KB_Tree.SplitType.VERTICAL);
+
+                thePage.insert({ x: 11, y: 10 });
+                thePage.insert({ x: 6, y: 14 });
+
+                expect(thePage.children[0].children[0].splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
             });
 
             it('should properly update its boundaries and its children\'s boundaries', function() {
@@ -182,7 +220,7 @@ describe('KB_Tree.Page', function() {
             theTree.insert({ x: 16, y: 8 });
 
             expect(theTree.print()).to.eql([
-                '[REGION (max: 7)] - boundaries: [2, 17] x [1, 19]',
+                '[REGION (max: 7)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
                 '|----[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
                 '|    |',
@@ -209,11 +247,11 @@ describe('KB_Tree.Page', function() {
             theTree.insert({ x: 16, y: 8 });
 
             expect(theTree.print()).to.eql([
-                '[REGION (max: 2)] - boundaries: [2, 17] x [1, 19]',
+                '[REGION (max: 2)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
-                '|----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19]',
+                '|----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19] - split: VERTICAL',
                 '|    |',
-                '|    |----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19]',
+                '|    |----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19] - split: HORIZONTAL',
                 '|    |    |',
                 '|    |    |----[POINTS (max: 2)] - boundaries: [3, 16] x [6, 8]',
                 '|    |    |    |',
