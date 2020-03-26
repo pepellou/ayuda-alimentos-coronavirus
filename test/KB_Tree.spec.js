@@ -17,7 +17,7 @@ describe('KB_Tree', function() {
             var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
 
             expect(theTree.root).not.to.be(undefined);
-            expect(theTree.root.type).to.be(KB_Tree.PageType.PointsPage);
+            expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
             expect(theTree.root.children.length).to.be(0);
             expect(theTree.root.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
         });
@@ -40,13 +40,13 @@ describe('KB_Tree', function() {
 
         it('should create a region when count > page size', function() {
             for (var i = 0; i < PAGE_SIZE; i++) {
-                expect(theTree.root.type).to.be(KB_Tree.PageType.PointsPage);
+                expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
                 theTree.insert({ x: i, y: i });
             }
 
             theTree.insert({ x: 99, y: 99 });
 
-            expect(theTree.root.type).to.be(KB_Tree.PageType.RegionPage);
+            expect(theTree.root.pageType).to.be(KB_Tree.PageType.RegionPage);
             expect(theTree.root.children.length).to.be(2);
         });
 
@@ -140,25 +140,25 @@ describe('KB_Tree.Page', function() {
             });
 
             it('should convert from PointsPage into RegionPage', function() {
-                expect(thePage.type).to.be(KB_Tree.PageType.PointsPage);
+                expect(thePage.pageType).to.be(KB_Tree.PageType.PointsPage);
 
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.type).to.be(KB_Tree.PageType.RegionPage);
+                expect(thePage.pageType).to.be(KB_Tree.PageType.RegionPage);
             });
 
             it('should have 2 PointsPage as children', function() {
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.children[0].type).to.be(KB_Tree.PageType.PointsPage);
-                expect(thePage.children[1].type).to.be(KB_Tree.PageType.PointsPage);
+                expect(thePage.children[0].pageType).to.be(KB_Tree.PageType.PointsPage);
+                expect(thePage.children[1].pageType).to.be(KB_Tree.PageType.PointsPage);
                 expect(
                     thePage.children[0].children.length +
                     thePage.children[1].children.length
                 ).to.be(thePage._pagesize + 1);
             });
 
-            it('should keep switching split type', function() {
+            it('should keep switching split pageType', function() {
                 expect(thePage.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
 
                 thePage.insert({ x: 9, y: 9 });

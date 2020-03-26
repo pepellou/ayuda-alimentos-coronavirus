@@ -27,7 +27,7 @@ var KB_Tree = function(options) {
 };
 
 KB_Tree.Page = function(options) {
-    this.type = KB_Tree.PageType.PointsPage;
+    this.pageType = KB_Tree.PageType.PointsPage;
     this.splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
     this.children = [];
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
@@ -35,8 +35,8 @@ KB_Tree.Page = function(options) {
 
     this.insert = function(point) {
         if (this.children.length == this._pagesize) {
-            if (this.type == KB_Tree.PageType.PointsPage) {
-                this.type = KB_Tree.PageType.RegionPage;
+            if (this.pageType == KB_Tree.PageType.PointsPage) {
+                this.pageType = KB_Tree.PageType.RegionPage;
                 this.splitAndAdd(point);
             } else {
                 // TODO select child according to current dimension
@@ -92,15 +92,15 @@ KB_Tree.Page = function(options) {
         var parts = [];
         parts.push(
             '['
-            + ((this.type == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' )
+            + ((this.pageType == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' )
             + ' (max: ' + this._pagesize + ')] - boundaries: ['
             + this.boundaries.x[0] + ', '
             + this.boundaries.x[1] + '] x ['
             + this.boundaries.y[0] + ', '
             + this.boundaries.y[1] + ']'
-            + ( (this.type == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType) )
+            + ( (this.pageType == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType) )
         );
-        if (this.type == KB_Tree.PageType.PointsPage) {
+        if (this.pageType == KB_Tree.PageType.PointsPage) {
             parts.push('|');
             var line_points = '+----{ ';
             var first = true;
@@ -141,8 +141,8 @@ KB_Tree.PageType = {
 KB_Tree.SplitType = {
     HORIZONTAL: 'HORIZONTAL',
     VERTICAL: 'VERTICAL',
-    next: function(type) {
-        return type == KB_Tree.SplitType.HORIZONTAL ? KB_Tree.SplitType.VERTICAL : KB_Tree.SplitType.HORIZONTAL;
+    next: function(pageType) {
+        return pageType == KB_Tree.SplitType.HORIZONTAL ? KB_Tree.SplitType.VERTICAL : KB_Tree.SplitType.HORIZONTAL;
     }
 };
 
