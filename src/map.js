@@ -49,7 +49,12 @@ function TweetsMap() {
         self._map = L.map('mapid', {
             minZoom: 3,
             maxZoom: 13
-        }).setView([39.62,-4.25], 7);
+        });
+
+        self._map.on('load', self._updateBoundaries);
+        self._map.on('moveend', self._updateBoundaries);
+
+        self._map.setView([39.62,-4.25], 7);
 
         self._circles = L.featureGroup();
 
@@ -65,6 +70,16 @@ function TweetsMap() {
         self._map.addLayer(self._circles);
 
         return self;
+    };
+
+    self._updateBoundaries = function() {
+        var bounds = self._map.getBounds();
+        var sw = bounds.getSouthWest();
+        var ne = bounds.getNorthEast();
+        self._boundaries = {
+            lat: [ sw.lat, ne.lat ],
+            lon: [ sw.lng, ne.lng ]
+        };
     };
 
     self.clearTweets = function() {
