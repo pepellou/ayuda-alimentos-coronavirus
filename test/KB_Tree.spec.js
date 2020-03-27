@@ -156,6 +156,8 @@ describe('KB_Tree.Page', function() {
                     thePage.children[0].children.length +
                     thePage.children[1].children.length
                 ).to.be(thePage._pagesize + 1);
+                expect(thePage.children[0].parent).to.be(thePage);
+                expect(thePage.children[1].parent).to.be(thePage);
             });
 
             it('should keep switching split pageType', function() {

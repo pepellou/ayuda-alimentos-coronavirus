@@ -29,8 +29,9 @@ var KB_Tree = function(options) {
 KB_Tree.Page = function(options) {
     this.pageType = KB_Tree.PageType.PointsPage;
     this.splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
-    this.children = [];
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
+    this.parent = (options && options.parent) ? options.parent : null;
+    this.children = [];
     this.boundaries = null;
 
     this.convertToRegion = function() {
@@ -97,8 +98,8 @@ KB_Tree.Page = function(options) {
 
     this.splitAndAdd = function(point) {
         let newChildren = [
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType) }),
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType) })
+            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this }),
+            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this })
         ];
         for (var i = 0; i < this._pagesize / 2; i++) {
             newChildren[0].insert(this.children[i]);
