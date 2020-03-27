@@ -33,15 +33,39 @@ KB_Tree.Page = function(options) {
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
     this.boundaries = null;
 
-    this.insert = function(point) {
-        if (this.children.length == this._pagesize) {
-            if (this.pageType == KB_Tree.PageType.PointsPage) {
-                this.pageType = KB_Tree.PageType.RegionPage;
-                this.splitAndAdd(point);
-            } else {
+    this.convertToRegion = function() {
+        this.pageType = KB_Tree.PageType.RegionPage;
+
+        this.insert = function(point) {
+            if (this.children.length == this._pagesize) {
                 // TODO select child according to current dimension
                 this.children[0].insert(point);
+            } else {
+                this.children.push(point);
+                this.children.sort((p1, p2) => p1.y - p2.y);
             }
+            this._updateBoundaries(point);
+        };
+
+        this.print = function() {
+            var parts = [];
+
+            parts.push('[' + this.printPageType() + ' (max: ' + this._pagesize + ')]' + this.printBoundaries() + this.printSplitType());
+
+            this.children.forEach((p, i) => {
+                parts.push('|');
+                var pref = (i < this.children.length - 1) ? [ '|----', '|    ' ] : [ '+----', '     ' ];
+                Array.prototype.push.apply(parts, p.print().map((l, j) => (j == 0) ? pref[0] + l : pref[1] + l));
+            });
+
+            return parts;
+        };
+    };
+
+    this.insert = function(point) {
+        if (this.children.length == this._pagesize) {
+            this.splitAndAdd(point);
+            this.convertToRegion();
         } else {
             this.children.push(point);
             this.children.sort((p1, p2) => p1.y - p2.y);
@@ -87,47 +111,22 @@ KB_Tree.Page = function(options) {
         this.children = newChildren;
     };
 
-    // TODO Refactor
-    this.print = function() {
-        var parts = [];
-        parts.push(
-            '['
-            + ((this.pageType == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' )
-            + ' (max: ' + this._pagesize + ')] - boundaries: ['
+    this.printPageType = () => ((this.pageType == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' );
+    this.printSplitType = () => ((this.pageType == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType))
+    this.printBoundaries = () => {
+        return ' - boundaries: ['
             + this.boundaries.x[0] + ', '
             + this.boundaries.x[1] + '] x ['
             + this.boundaries.y[0] + ', '
-            + this.boundaries.y[1] + ']'
-            + ( (this.pageType == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType) )
-        );
-        if (this.pageType == KB_Tree.PageType.PointsPage) {
-            parts.push('|');
-            var line_points = '+----{ ';
-            var first = true;
-            for (var i = 0; i < this.children.length; i++) {
-                var the_point = this.children[i];
-                if (!first) {
-                    line_points += ', ';
-                }
-                line_points += '(' + the_point.x + ', ' + the_point.y + ')';
-                first = false;
-            }
-            parts.push(line_points + ' }');
-        } else {
-            var left_lines = this.children[0].print();
-            var right_lines = this.children[1].print();
-            parts.push('|');
-            parts.push('|----' + left_lines.shift());
-            left_lines.forEach(function(line) {
-                parts.push('|    ' + line);
-            });
-            parts.push('|');
-            parts.push('+----' + right_lines.shift());
-            right_lines.forEach(function(line) {
-                parts.push('     ' + line);
-            });
-        }
-        return parts;
+            + this.boundaries.y[1] + ']';
+    };
+
+    this.print = function() {
+        return [
+            '[' + this.printPageType() + ' (max: ' + this._pagesize + ')]' + this.printBoundaries() + this.printSplitType(),
+            '|',
+            '+----{ ' + this.children.map(p => '(' + p.x + ', ' + p.y + ')').join(', ') + ' }'
+        ];
     };
 
     return this;
