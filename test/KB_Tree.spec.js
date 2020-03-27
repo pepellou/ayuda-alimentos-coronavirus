@@ -13,13 +13,34 @@ describe('KB_Tree', function() {
             expect(theTree.count()).to.be(0);
         });
 
-        it('should contain an empty root page of type PointsPage and splitType horizontal', function() {
-            var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
+        describe('should contain an empty root which...', function() {
 
-            expect(theTree.root).not.to.be(undefined);
-            expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
-            expect(theTree.root.children.length).to.be(0);
-            expect(theTree.root.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+            it('should be defined', function() {
+                expect(theTree.root).not.to.be(undefined);
+            });
+
+            it('should be a Points page', function() {
+                expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
+            });
+
+            it('should be empty', function() {
+                expect(theTree.root.children.length).to.be(0);
+            });
+
+            it('should have split type HORIZONTAL', function() {
+                expect(theTree.root.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+            });
+
+            it('should be linked to the tree', function() {
+                expect(theTree.root.tree).to.be(theTree);
+            });
+
+            let theTree;
+
+            beforeEach(function() {
+                theTree = new KB_Tree({ pagesize: PAGE_SIZE });
+            });
+
         });
 
     });
@@ -132,9 +153,10 @@ describe('KB_Tree.Page', function() {
         describe('when the page size is reached', function() {
 
             let thePage;
+            let theTree = 'just a tree';
 
             beforeEach(function() {
-                thePage = new KB_Tree.Page({ pagesize: 2 });
+                thePage = new KB_Tree.Page({ pagesize: 2, tree: theTree });
                 thePage.insert({ x: 1, y: 2 });
                 thePage.insert({ x: 0, y: 4 });
             });
@@ -147,17 +169,38 @@ describe('KB_Tree.Page', function() {
                 expect(thePage.pageType).to.be(KB_Tree.PageType.RegionPage);
             });
 
-            it('should have 2 PointsPage as children', function() {
-                thePage.insert({ x: 9, y: 9 });
+            describe('should have 2 children, and those pages...', function() {
 
-                expect(thePage.children[0].pageType).to.be(KB_Tree.PageType.PointsPage);
-                expect(thePage.children[1].pageType).to.be(KB_Tree.PageType.PointsPage);
-                expect(
-                    thePage.children[0].children.length +
-                    thePage.children[1].children.length
-                ).to.be(thePage._pagesize + 1);
-                expect(thePage.children[0].parent).to.be(thePage);
-                expect(thePage.children[1].parent).to.be(thePage);
+                it('should be 2', function() {
+                    expect(thePage.children.length).to.be(2);
+                });
+
+                it('should be PointsPage', function() {
+                    expect(thePage.children[0].pageType).to.be(KB_Tree.PageType.PointsPage);
+                    expect(thePage.children[1].pageType).to.be(KB_Tree.PageType.PointsPage);
+                });
+
+                it('should contain all the points', function() {
+                    expect(
+                        thePage.children[0].children.length +
+                        thePage.children[1].children.length
+                    ).to.be(thePage._pagesize + 1);
+                });
+
+                it('should be linked to the parent page', function() {
+                    expect(thePage.children[0].parent).to.be(thePage);
+                    expect(thePage.children[1].parent).to.be(thePage);
+                });
+
+                it('should be linked to the tree', function() {
+                    expect(thePage.children[0].tree).to.be(theTree);
+                    expect(thePage.children[1].tree).to.be(theTree);
+                });
+
+                beforeEach(function() {
+                    thePage.insert({ x: 9, y: 9 });
+                });
+
             });
 
             it('should keep switching split pageType', function() {

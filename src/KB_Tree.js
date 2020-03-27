@@ -6,7 +6,8 @@ var KB_Tree = function(options) {
     this.init = function() {
         this.root = new KB_Tree.Page({
             pagesize: this._pagesize,
-            splitType: KB_Tree.SplitType.HORIZONTAL
+            splitType: KB_Tree.SplitType.HORIZONTAL,
+            tree: this
         });
     };
 
@@ -31,6 +32,7 @@ KB_Tree.Page = function(options) {
     this.splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
     this.parent = (options && options.parent) ? options.parent : null;
+    this.tree = (options && options.tree) ? options.tree : null;
     this.children = [];
     this.boundaries = null;
 
@@ -98,8 +100,8 @@ KB_Tree.Page = function(options) {
 
     this.splitAndAdd = function(point) {
         let newChildren = [
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this }),
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this })
+            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this, tree: this.tree }),
+            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this, tree: this.tree })
         ];
         for (var i = 0; i < this._pagesize / 2; i++) {
             newChildren[0].insert(this.children[i]);
