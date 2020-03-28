@@ -4,6 +4,9 @@ var KB_Tree = function(options) {
     this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
 
     this.init = function() {
+        if (this.pagesize() < 4) {
+            throw KB_Tree.Exceptions.SmallPageSizeNotAllowedException;
+        }
         this.root = new KB_Tree.Page({
             pagesize: this.pagesize(),
             splitType: KB_Tree.SplitType.HORIZONTAL,
@@ -150,6 +153,10 @@ KB_Tree.SplitType = {
     next: function(pageType) {
         return pageType == KB_Tree.SplitType.HORIZONTAL ? KB_Tree.SplitType.VERTICAL : KB_Tree.SplitType.HORIZONTAL;
     }
+};
+
+KB_Tree.Exceptions = {
+    SmallPageSizeNotAllowedException: new Error('Cannot create tree with a pagesize less than 4'),
 };
 
 

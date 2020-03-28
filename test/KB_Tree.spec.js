@@ -1,16 +1,45 @@
 var expect = require('expect.js');
 var KB_Tree = require('../src/KB_Tree.js');
 
-const PAGE_SIZE = 7;
+const PAGE_SIZE = 6;
 
 describe('KB_Tree', function() {
 
     describe('#__construct()', function() {
 
+        let expectThisToThrow = (code, exception) => {
+            try {
+                code();
+                throw 'This should not happen';
+            } catch(e) {
+                expect(e).to.be(exception);
+            }
+        };
+
         it('should not contain any points', function() {
             var theTree = new KB_Tree({ pagesize: PAGE_SIZE });
 
             expect(theTree.count()).to.be(0);
+        });
+
+        it('should have a default pagesize of 4', function() {
+            var theTree = new KB_Tree();
+
+            expect(theTree.pagesize()).to.be(4);
+        });
+
+        it('should not allow a pagesize < 4', function() {
+            expectThisToThrow(() => {
+                new KB_Tree({ pagesize: 1 });
+            }, KB_Tree.Exceptions.SmallPageSizeNotAllowedException);
+
+            expectThisToThrow(() => {
+                new KB_Tree({ pagesize: 2 });
+            }, KB_Tree.Exceptions.SmallPageSizeNotAllowedException);
+
+            expectThisToThrow(() => {
+                new KB_Tree({ pagesize: 3 });
+            }, KB_Tree.Exceptions.SmallPageSizeNotAllowedException);
         });
 
         describe('should contain an empty root which...', function() {
