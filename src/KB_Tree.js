@@ -36,7 +36,7 @@ var KB_Tree = function(options) {
 };
 
 KB_Tree.Page = function(options) {
-    this.pageType = KB_Tree.PageType.PointsPage;
+    this._pageType = KB_Tree.PageType.PointsPage;
     this.splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
     this.parent = (options && options.parent) ? options.parent : null;
@@ -46,8 +46,10 @@ KB_Tree.Page = function(options) {
 
     this.pagesize = () => this._pagesize;
 
+    this.pageType = () => this._pageType;
+
     this.convertToRegion = function() {
-        this.pageType = KB_Tree.PageType.RegionPage;
+        this._pageType = KB_Tree.PageType.RegionPage;
 
         this.insert = function(point) {
             if (this.children.length == this._pagesize) {
@@ -124,7 +126,7 @@ KB_Tree.Page = function(options) {
         this.children = newChildren;
     };
 
-    this.printPageType = () => ((this.pageType == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' );
+    this.printPageType = () => ((this.pageType() == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' );
     this.printSplitType = () => ((this.pageType == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType))
     this.printBoundaries = () => {
         return ' - boundaries: ['

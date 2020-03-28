@@ -63,7 +63,7 @@ describe('KB_Tree', function() {
             });
 
             it('should be a Points page', function() {
-                expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
+                expect(theTree.root.pageType()).to.be(KB_Tree.PageType.PointsPage);
             });
 
             it('should be empty', function() {
@@ -199,17 +199,19 @@ describe('KB_Tree.Page', function() {
             let theTree = 'just a tree';
 
             beforeEach(function() {
-                thePage = new KB_Tree.Page({ pagesize: 2, tree: theTree });
+                thePage = new KB_Tree.Page({ pagesize: 4, tree: theTree });
                 thePage.insert({ x: 1, y: 2 });
                 thePage.insert({ x: 0, y: 4 });
+                thePage.insert({ x: 1, y: 3 });
+                thePage.insert({ x: 3, y: 1 });
             });
 
             it('should convert from PointsPage into RegionPage', function() {
-                expect(thePage.pageType).to.be(KB_Tree.PageType.PointsPage);
+                expect(thePage.pageType()).to.be(KB_Tree.PageType.PointsPage);
 
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.pageType).to.be(KB_Tree.PageType.RegionPage);
+                expect(thePage.pageType()).to.be(KB_Tree.PageType.RegionPage);
             });
 
             describe('should have 2 children, and those pages...', function() {
@@ -219,8 +221,8 @@ describe('KB_Tree.Page', function() {
                 });
 
                 it('should be PointsPage', function() {
-                    expect(thePage.children[0].pageType).to.be(KB_Tree.PageType.PointsPage);
-                    expect(thePage.children[1].pageType).to.be(KB_Tree.PageType.PointsPage);
+                    expect(thePage.children[0].pageType()).to.be(KB_Tree.PageType.PointsPage);
+                    expect(thePage.children[1].pageType()).to.be(KB_Tree.PageType.PointsPage);
                 });
 
                 it('should contain all the points', function() {
