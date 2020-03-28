@@ -102,27 +102,48 @@ describe('KB_Tree', function() {
             // TODO check that if we find all the points in the tree, they're the ones we added
         });
 
-        it('should create a region when count > page size', function() {
-            for (var i = 0; i < PAGE_SIZE; i++) {
-                expect(theTree.root.pageType).to.be(KB_Tree.PageType.PointsPage);
-                theTree.insert({ x: i, y: i });
-            }
+        describe('should create a region when count > page size', function() {
 
-            theTree.insert({ x: 99, y: 99 });
+            beforeEach(function() {
+                for (var i = 0; i < PAGE_SIZE; i++) {
+                    expect(theTree.root.pageType()).to.be(KB_Tree.PageType.PointsPage);
+                    theTree.insert({ x: i, y: i });
+                }
+            });
 
-            expect(theTree.root.pageType).to.be(KB_Tree.PageType.RegionPage);
-            expect(theTree.root.children.length).to.be(2);
+            it('the region must be created', function() {
+                expect(theTree.root.pageType()).to.be(KB_Tree.PageType.PointsPage);
+
+                theTree.insert({ x: 99, y: 99 });
+
+                expect(theTree.root.pageType()).to.be(KB_Tree.PageType.RegionPage);
+            });
+
+            it('it will have pagesize / 2 children', function() {
+                theTree.insert({ x: 99, y: 99 });
+
+                expect(theTree.root.children.length).to.be(PAGE_SIZE / 2);
+            });
+
+            it('the children should be point pages', function() {
+                theTree.insert({ x: 99, y: 99 });
+
+                expect(theTree.root.children[0].pageType()).to.be(KB_Tree.PageType.PointsPage);
+            });
+
         });
 
-    });
+        // TODO test that maximum in a points page is pagesize while in a region page is pagesize / 2
 
-    let theTree;
-    const aPoint = { x: 1, y: 1 };
+        let theTree;
+        const aPoint = { x: 1, y: 1 };
 
-    beforeEach(function() {
-        theTree = new KB_Tree({
-            pagesize: PAGE_SIZE
+        beforeEach(function() {
+            theTree = new KB_Tree({
+                pagesize: PAGE_SIZE
+            });
         });
+
     });
 
 });
@@ -140,7 +161,65 @@ describe('KB_Tree.Page', function() {
         it('should have a default split type horizontal', function() {
             var thePage = new KB_Tree.Page();
 
-            expect(thePage.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+            expect(thePage.splitType()).to.be(KB_Tree.SplitType.HORIZONTAL);
+        });
+
+    });
+
+    describe('#wouldChangeLowerBoundary()', function() {
+
+        describe('when splitType = HORIZONTAL', function() {
+
+            let thePage;
+
+            beforeEach(function() {
+                thePage = new KB_Tree.Page({ splitType: KB_Tree.SplitType.HORIZONTAL, pagesize: 4 });
+                thePage.insert({ x: 0, y: 0 });
+                thePage.insert({ x: 10, y: 10 });
+            });
+
+            it('should return true if point.x < boundary minimum x', function() {
+                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
+                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: 5  })).to.be(true);
+                expect(thePage.wouldChangeLowerBoundary({ x: -4 , y: 5  })).to.be(true);
+            });
+
+            it('should return false if point.x >= boundary minimum x', function() {
+                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: 5  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: -1 })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: 11 })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 10 , y: 5  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 15 , y: 5  })).to.be(false);
+            });
+
+        });
+
+        describe('when splitType = VERTICAL', function() {
+
+            let thePage;
+
+            beforeEach(function() {
+                thePage = new KB_Tree.Page({ splitType: KB_Tree.SplitType.VERTICAL, pagesize: 4 });
+                thePage.insert({ x: 0, y: 0 });
+                thePage.insert({ x: 10, y: 10 });
+            });
+
+            it('should return true if point.y < boundary minimum y', function() {
+                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: -1 })).to.be(true);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: -4 })).to.be(true);
+            });
+
+            it('should return false if point.y >= boundary minimum y', function() {
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 0  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: 0  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 11 , y: 0  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 10 })).to.be(false);
+                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 15 })).to.be(false);
+            });
+
         });
 
     });
@@ -157,20 +236,40 @@ describe('KB_Tree.Page', function() {
             expect(thePage.children[0]).to.be(aPoint);
         });
 
-        it('should keep the points sorted (according to split type) in the children array', function() {
-            var thePage = new KB_Tree.Page({ pagesize: PAGE_SIZE, splitType: KB_Tree.SplitType.HORIZONTAL });
+        describe('should keep the points sorted (according to split type) in the children array', function() {
 
-            thePage.insert({ x: 1, y: 2 });
-            thePage.insert({ x: -3, y: 5 });
-            thePage.insert({ x: 3, y: 0 });
-            thePage.insert({ x: 7, y: 6 });
+            it('sorting by y when splitType is HORIZONTAL', function() {
+                var thePage = new KB_Tree.Page({ pagesize: 4, splitType: KB_Tree.SplitType.HORIZONTAL });
 
-            expect(thePage.children).to.eql([
-                { x: 3, y: 0 },
-                { x: 1, y: 2 },
-                { x: -3, y: 5 },
-                { x: 7, y: 6 }
-            ]);
+                thePage.insert({ x: 1, y: 2 });
+                thePage.insert({ x: -3, y: 5 });
+                thePage.insert({ x: 3, y: 0 });
+                thePage.insert({ x: 7, y: 6 });
+
+                expect(thePage.children).to.eql([
+                    { x: 3, y: 0 },
+                    { x: 1, y: 2 },
+                    { x: -3, y: 5 },
+                    { x: 7, y: 6 }
+                ]);
+            });
+
+            it('sorting by x when splitType is VERTICAL', function() {
+                var thePage = new KB_Tree.Page({ pagesize: 4, splitType: KB_Tree.SplitType.VERTICAL });
+
+                thePage.insert({ x: 1, y: 2 });
+                thePage.insert({ x: -3, y: 5 });
+                thePage.insert({ x: 3, y: 0 });
+                thePage.insert({ x: 7, y: 6 });
+
+                expect(thePage.children).to.eql([
+                    { x: -3, y: 5 },
+                    { x: 1, y: 2 },
+                    { x: 3, y: 0 },
+                    { x: 7, y: 6 }
+                ]);
+            });
+
         });
 
         it('should update the boundaries of the page', function() {
@@ -266,34 +365,35 @@ describe('KB_Tree.Page', function() {
 
                 expect(thePage.boundaries).to.eql({
                     x: [ 0, 9 ],
-                    y: [ 2, 9 ]
+                    y: [ 1, 9 ]
                 });
 
                 expect(thePage.children[0].boundaries).to.eql({
-                    x: [ 1, 1 ],
-                    y: [ 2, 2 ]
+                    x: [ 1, 3 ],
+                    y: [ 1, 2 ]
                 });
 
                 expect(thePage.children[1].boundaries).to.eql({
                     x: [ 0, 9 ],
-                    y: [ 4, 9 ]
+                    y: [ 3, 9 ]
                 });
             });
 
-            it('should support the addition of new points', function() {
+            it('should support the addition of new points [REGRESSION]', function() {
                 thePage.insert({ x: 9, y: 9 });
                 thePage.insert({ x: 99, y: 99 });
 
                 expect(thePage.children[0].children).to.eql([
                     { x: 1, y: 2 },
-                    { x: 99, y: 99 }
+                    { x: 3, y: 1 }
                 ]);
 
                 expect(thePage.children[1].children).to.eql([
                     { x: 0, y: 4 },
-                    { x: 9, y: 9 }
+                    { x: 1, y: 3 },
+                    { x: 9, y: 9 },
+                    { x: 99, y: 99 }
                 ]);
-
             });
 
         });
@@ -309,7 +409,7 @@ describe('KB_Tree.Page', function() {
             theTree.insert({ x: 6, y: 12 });
 
             expect(theTree.print()).to.eql([
-                '[POINTS (max: 7)] - boundaries: [2, 17] x [6, 15]',
+                '[POINTS (max: 6)] - boundaries: [2, 17] x [6, 15] - split: HORIZONTAL',
                 '|',
                 '+----{ (3, 6), (2, 7), (6, 12), (17, 15) }',
             ].join('\n'));
@@ -320,60 +420,57 @@ describe('KB_Tree.Page', function() {
             theTree.insert({ x: 2, y: 7 });
             theTree.insert({ x: 17, y: 15 });
             theTree.insert({ x: 6, y: 12 });
-            theTree.insert({ x: 13, y: 15 });
+            theTree.insert({ x: 13, y: 14 });
             theTree.insert({ x: 9, y: 1 });
             theTree.insert({ x: 10, y: 19 });
             theTree.insert({ x: 16, y: 8 });
 
             expect(theTree.print()).to.eql([
-                '[REGION (max: 7)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
+                '[REGION (max: 6)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
-                '|----[POINTS (max: 7)] - boundaries: [2, 9] x [1, 12]',
+                '|----[POINTS (max: 6)] - boundaries: [3, 9] x [1, 6] - split: VERTICAL',
                 '|    |',
-                '|    +----{ (9, 1), (3, 6), (2, 7), (6, 12) }',
+                '|    +----{ (3, 6), (9, 1) }',
                 '|',
-                '+----[POINTS (max: 7)] - boundaries: [10, 17] x [8, 19]',
+                '|----[POINTS (max: 6)] - boundaries: [2, 16] x [7, 12] - split: VERTICAL',
+                '|    |',
+                '|    +----{ (2, 7), (6, 12), (16, 8) }',
+                '|',
+                '+----[POINTS (max: 6)] - boundaries: [10, 17] x [14, 19] - split: VERTICAL',
                 '     |',
-                '     +----{ (16, 8), (17, 15), (13, 15), (10, 19) }',
+                '     +----{ (10, 19), (13, 14), (17, 15) }',
             ].join('\n'));
         });
 
         it('should print a tree with several levels of nesting', function() {
-            theTree = new KB_Tree({
-                pagesize: 2
-            });
+            theTree = new KB_Tree({ pagesize: 4 });
 
             theTree.insert({ x: 3, y: 6 });
             theTree.insert({ x: 2, y: 7 });
             theTree.insert({ x: 17, y: 15 });
             theTree.insert({ x: 6, y: 12 });
-            theTree.insert({ x: 13, y: 15 });
+            theTree.insert({ x: 13, y: 14 });
             theTree.insert({ x: 9, y: 1 });
             theTree.insert({ x: 10, y: 19 });
             theTree.insert({ x: 16, y: 8 });
+            theTree.insert({ x: 10, y: 10 });
 
             expect(theTree.print()).to.eql([
-                '[REGION (max: 2)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
+                '[REGION (max: 4)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
-                '|----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19] - split: VERTICAL',
+                '|----[REGION (max: 4)] - boundaries: [2, 16] x [1, 10] - split: VERTICAL',
                 '|    |',
-                '|    |----[REGION (max: 2)] - boundaries: [3, 16] x [1, 19] - split: HORIZONTAL',
+                '|    |----[POINTS (max: 4)] - boundaries: [2, 3] x [6, 7] - split: HORIZONTAL',
                 '|    |    |',
-                '|    |    |----[POINTS (max: 2)] - boundaries: [9, 16] x [1, 8]',
-                '|    |    |    |',
-                '|    |    |    +----{ (9, 1), (16, 8) }',
-                '|    |    |',
-                '|    |    +----[POINTS (max: 2)] - boundaries: [3, 10] x [6, 19]',
-                '|    |         |',
-                '|    |         +----{ (3, 6), (10, 19) }',
+                '|    |    +----{ (3, 6), (2, 7) }',
                 '|    |',
-                '|    +----[POINTS (max: 2)] - boundaries: [6, 13] x [12, 15]',
+                '|    +----[POINTS (max: 4)] - boundaries: [9, 16] x [1, 10] - split: HORIZONTAL',
                 '|         |',
-                '|         +----{ (6, 12), (13, 15) }',
+                '|         +----{ (9, 1), (16, 8), (10, 10) }',
                 '|',
-                '+----[POINTS (max: 2)] - boundaries: [2, 17] x [7, 15]',
+                '+----[POINTS (max: 4)] - boundaries: [6, 17] x [12, 19] - split: VERTICAL',
                 '     |',
-                '     +----{ (2, 7), (17, 15) }'
+                '     +----{ (6, 12), (10, 19), (13, 14), (17, 15) }'
             ].join('\n'));
         });
 

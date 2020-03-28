@@ -59,13 +59,15 @@ KB_Tree.Page = function(options) {
         this._pageType = KB_Tree.PageType.RegionPage;
 
         this.insert = function(point) {
-            if (this.children.length == this._pagesize) {
-                // TODO select child according to current dimension
-                this.children[0].insert(point);
-            } else {
-                this.children.push(point);
-                this.children.sort((p1, p2) => p1.y - p2.y);
+            this._count++;
+            let index_to_insert = 0;
+            for (var i = 0; i < this.children.length; i++) {
+                if (!this.children[i].wouldChangeLowerBoundary(point)) {
+                    index_to_insert = i;
+                }
             }
+            // TODO maybe we need to rebalance the tree when 1st child starts overlapping with 2nd and so
+            this.children[index_to_insert].insert(point);
             this._updateBoundaries(point);
         };
 
@@ -85,12 +87,17 @@ KB_Tree.Page = function(options) {
     };
 
     this.insert = function(point) {
+        this._count++;
         if (this.children.length == this.pagesize()) {
             this.splitAndAdd(point);
             this.convertToRegion();
         } else {
             this.children.push(point);
-            this.children.sort((p1, p2) => p1.y - p2.y);
+            this.children.sort(
+                (this.splitType() == KB_Tree.SplitType.HORIZONTAL)
+                ? (p1, p2) => p1.y - p2.y
+                : (p1, p2) => p1.x - p2.x
+            );
         }
         this._updateBoundaries(point);
     };
@@ -117,18 +124,30 @@ KB_Tree.Page = function(options) {
         }
     };
 
+    this.wouldChangeLowerBoundary = function(point) {
+        return (this.splitType() == KB_Tree.SplitType.VERTICAL)
+            ? point.y < this.boundaries.y[0]
+            : point.x < this.boundaries.x[0];
+    };
+
     this.splitAndAdd = function(point) {
-        let newChildren = [
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this, tree: this.tree }),
-            new KB_Tree.Page({ pagesize: this._pagesize, splitType: KB_Tree.SplitType.next(this.splitType), parent: this, tree: this.tree })
-        ];
-        for (var i = 0; i < this._pagesize / 2; i++) {
-            newChildren[0].insert(this.children[i]);
+        let newChildren = [];
+        let index_to_insert = 0;
+        for (var i = 0; i < this.pagesize() / 2; i++) {
+            var theChildPage = new KB_Tree.Page({
+                pagesize: this.pagesize(),
+                splitType: KB_Tree.SplitType.next(this.splitType()),
+                parent: this,
+                tree: this.tree
+            });
+            theChildPage.insert(this.children[2 * i]);
+            theChildPage.insert(this.children[2 * i + 1]);
+            newChildren.push(theChildPage);
+            if (!theChildPage.wouldChangeLowerBoundary(point)) {
+                index_to_insert = i;
+            }
         }
-        for (; i < this.children.length; i++) {
-            newChildren[1].insert(this.children[i]);
-        }
-        newChildren[1].insert(point);
+        newChildren[index_to_insert].insert(point);
 
         this.children = newChildren;
     };
