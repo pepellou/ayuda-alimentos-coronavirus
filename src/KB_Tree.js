@@ -38,6 +38,8 @@ KB_Tree.Page = function(options) {
     this.children = [];
     this.boundaries = null;
 
+    this.pagesize = () => this._pagesize;
+
     this.convertToRegion = function() {
         this.pageType = KB_Tree.PageType.RegionPage;
 
@@ -55,7 +57,7 @@ KB_Tree.Page = function(options) {
         this.print = function() {
             var parts = [];
 
-            parts.push('[' + this.printPageType() + ' (max: ' + this._pagesize + ')]' + this.printBoundaries() + this.printSplitType());
+            parts.push('[' + this.printPageType() + ' (max: ' + this.pagesize() + ')]' + this.printBoundaries() + this.printSplitType());
 
             this.children.forEach((p, i) => {
                 parts.push('|');
