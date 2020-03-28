@@ -42,6 +42,20 @@ describe('KB_Tree', function() {
             }, KB_Tree.Exceptions.SmallPageSizeNotAllowedException);
         });
 
+        it('should not allow an odd pagesize', function() {
+            new KB_Tree({ pagesize: 4 });
+            new KB_Tree({ pagesize: 6 });
+            new KB_Tree({ pagesize: 8 });
+
+            expectThisToThrow(() => {
+                new KB_Tree({ pagesize: 5 });
+            }, KB_Tree.Exceptions.OddPageSizeNotAllowedException);
+
+            expectThisToThrow(() => {
+                new KB_Tree({ pagesize: 7 });
+            }, KB_Tree.Exceptions.OddPageSizeNotAllowedException);
+        });
+
         describe('should contain an empty root which...', function() {
 
             it('should be defined', function() {

@@ -7,6 +7,9 @@ var KB_Tree = function(options) {
         if (this.pagesize() < 4) {
             throw KB_Tree.Exceptions.SmallPageSizeNotAllowedException;
         }
+        if (this.pagesize() % 2 == 1) {
+            throw KB_Tree.Exceptions.OddPageSizeNotAllowedException;
+        }
         this.root = new KB_Tree.Page({
             pagesize: this.pagesize(),
             splitType: KB_Tree.SplitType.HORIZONTAL,
@@ -157,6 +160,7 @@ KB_Tree.SplitType = {
 
 KB_Tree.Exceptions = {
     SmallPageSizeNotAllowedException: new Error('Cannot create tree with a pagesize less than 4'),
+    OddPageSizeNotAllowedException: new Error('Cannot create tree with an odd pagesize - only even pagesizes are allowed')
 };
 
 
