@@ -61,23 +61,23 @@ describe('KB.Tree', function() {
         describe('should contain an empty root which...', function() {
 
             it('should be defined', function() {
-                expect(theTree.root).not.to.be(undefined);
+                expect(theTree.root()).not.to.be(undefined);
             });
 
             it('should be a Points page', function() {
-                expect(theTree.root.pageType()).to.be(KB.PageType.PointsPage);
+                expect(theTree.root().pageType()).to.be(KB.PageType.PointsPage);
             });
 
             it('should be empty', function() {
-                expect(theTree.root.children.length).to.be(0);
+                expect(theTree.root().children.length).to.be(0);
             });
 
             it('should have split type HORIZONTAL', function() {
-                expect(theTree.root.splitType()).to.be(KB.SplitType.HORIZONTAL);
+                expect(theTree.root().splitType()).to.be(KB.SplitType.HORIZONTAL);
             });
 
             it('should be linked to the tree', function() {
-                expect(theTree.root.tree()).to.be(theTree);
+                expect(theTree.root().tree()).to.be(theTree);
             });
 
             let theTree;
@@ -108,29 +108,29 @@ describe('KB.Tree', function() {
 
             beforeEach(function() {
                 for (var i = 0; i < PAGE_SIZE; i++) {
-                    expect(theTree.root.pageType()).to.be(KB.PageType.PointsPage);
+                    expect(theTree.root().pageType()).to.be(KB.PageType.PointsPage);
                     theTree.insert({ x: i, y: i });
                 }
             });
 
             it('the region must be created', function() {
-                expect(theTree.root.pageType()).to.be(KB.PageType.PointsPage);
+                expect(theTree.root().pageType()).to.be(KB.PageType.PointsPage);
 
                 theTree.insert({ x: 99, y: 99 });
 
-                expect(theTree.root.pageType()).to.be(KB.PageType.RegionPage);
+                expect(theTree.root().pageType()).to.be(KB.PageType.RegionPage);
             });
 
             it('it will have pagesize / 2 children', function() {
                 theTree.insert({ x: 99, y: 99 });
 
-                expect(theTree.root.children.length).to.be(PAGE_SIZE / 2);
+                expect(theTree.root().children.length).to.be(PAGE_SIZE / 2);
             });
 
             it('the children should be point pages', function() {
                 theTree.insert({ x: 99, y: 99 });
 
-                expect(theTree.root.children[0].pageType()).to.be(KB.PageType.PointsPage);
+                expect(theTree.root().children[0].pageType()).to.be(KB.PageType.PointsPage);
             });
 
         });
@@ -402,6 +402,10 @@ describe('KB.Page', function() {
 
     });
 
+});
+
+describe('KB.Printer', function() {
+
     describe('#print()', function() {
 
         it('should print a simple points page', function() {
@@ -410,7 +414,9 @@ describe('KB.Page', function() {
             theTree.insert({ x: 17, y: 15 });
             theTree.insert({ x: 6, y: 12 });
 
-            expect(theTree.print()).to.eql([
+            var printer = new KB.Printer(theTree);
+
+            expect(printer.print()).to.eql([
                 '[POINTS (max: 6)] - boundaries: [2, 17] x [6, 15] - split: HORIZONTAL',
                 '|',
                 '+----{ (3, 6), (2, 7), (6, 12), (17, 15) }',
@@ -427,7 +433,9 @@ describe('KB.Page', function() {
             theTree.insert({ x: 10, y: 19 });
             theTree.insert({ x: 16, y: 8 });
 
-            expect(theTree.print()).to.eql([
+            var printer = new KB.Printer(theTree);
+
+            expect(printer.print()).to.eql([
                 '[REGION (max: 6)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
                 '|----[POINTS (max: 6)] - boundaries: [3, 9] x [1, 6] - split: VERTICAL',
@@ -457,7 +465,9 @@ describe('KB.Page', function() {
             theTree.insert({ x: 16, y: 8 });
             theTree.insert({ x: 10, y: 10 });
 
-            expect(theTree.print()).to.eql([
+            var printer = new KB.Printer(theTree);
+
+            expect(printer.print()).to.eql([
                 '[REGION (max: 4)] - boundaries: [2, 17] x [1, 19] - split: HORIZONTAL',
                 '|',
                 '|----[REGION (max: 4)] - boundaries: [2, 16] x [1, 10] - split: VERTICAL',

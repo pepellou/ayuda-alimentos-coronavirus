@@ -16,6 +16,58 @@ var KB_Exceptions = {
     OddPageSizeNotAllowedException: new Error('Cannot create tree with an odd pagesize - only even pagesizes are allowed')
 };
 
+var KB_Printer = function(tree) {
+
+    this.print = function() {
+        return this._printPage(tree.root()).join('\n');
+    };
+
+    this._printPage = function(page) {
+        return (page.pageType() == KB_PageType.PointsPage)
+            ? this._printPointsPage(page)
+            : this._printRegionPage(page);
+    };
+
+    this._printPointsPage = function(page) {
+        return [
+            this._printHeadline(page),
+            '|',
+            '+----{ ' + page.children.map(p => '(' + p.x + ', ' + p.y + ')').join(', ') + ' }'
+        ];
+    };
+
+    this._printRegionPage = function(page) {
+        var self = this;
+        var parts = [];
+
+        parts.push(this._printHeadline(page));
+
+        page.children.forEach((p, i) => {
+            parts.push('|');
+            var pref = (i < page.children.length - 1) ? [ '|----', '|    ' ] : [ '+----', '     ' ];
+            Array.prototype.push.apply(parts, self._printPage(p).map((l, j) => (j == 0) ? pref[0] + l : pref[1] + l));
+        });
+
+        return parts;
+    };
+
+    this._printHeadline = (page) => '[' + this._printPageType(page) + ' (max: ' + page.pagesize() + ')]' + this._printBoundaries(page) + this._printSplitType(page);
+
+    this._printPageType = (page) => ((page.pageType() == KB_PageType.PointsPage) ? 'POINTS' : 'REGION' );
+
+    this._printSplitType = (page) => ' - split: ' + page.splitType();
+
+    this._printBoundaries = (page) => {
+        return ' - boundaries: ['
+            + page.boundaries.x[0] + ', '
+            + page.boundaries.x[1] + '] x ['
+            + page.boundaries.y[0] + ', '
+            + page.boundaries.y[1] + ']';
+    };
+
+    return this;
+};
+
 var KB_Page = function(options) {
 
     this.init = function() {
@@ -54,19 +106,6 @@ var KB_Page = function(options) {
             this._updateBoundaries(point);
         };
 
-        this.print = function() {
-            var parts = [];
-
-            parts.push('[' + this.printPageType() + ' (max: ' + this.pagesize() + ')]' + this.printBoundaries() + this.printSplitType());
-
-            this.children.forEach((p, i) => {
-                parts.push('|');
-                var pref = (i < this.children.length - 1) ? [ '|----', '|    ' ] : [ '+----', '     ' ];
-                Array.prototype.push.apply(parts, p.print().map((l, j) => (j == 0) ? pref[0] + l : pref[1] + l));
-            });
-
-            return parts;
-        };
     };
 
     this.insert = function(point) {
@@ -135,24 +174,6 @@ var KB_Page = function(options) {
         this.children = newChildren;
     };
 
-    this.printPageType = () => ((this.pageType() == KB_PageType.PointsPage) ? 'POINTS' : 'REGION' );
-    this.printSplitType = () => (' - split: ' + this.splitType());
-    this.printBoundaries = () => {
-        return ' - boundaries: ['
-            + this.boundaries.x[0] + ', '
-            + this.boundaries.x[1] + '] x ['
-            + this.boundaries.y[0] + ', '
-            + this.boundaries.y[1] + ']';
-    };
-
-    this.print = function() {
-        return [
-            '[' + this.printPageType() + ' (max: ' + this.pagesize() + ')]' + this.printBoundaries() + this.printSplitType(),
-            '|',
-            '+----{ ' + this.children.map(p => '(' + p.x + ', ' + p.y + ')').join(', ') + ' }'
-        ];
-    };
-
     return this.init();
 };
 
@@ -164,7 +185,7 @@ var KB_Tree = function(options) {
 
         this._ensurePagesizeIsValid();
 
-        this.root = new KB_Page({
+        this._root = new KB_Page({
             pagesize: this.pagesize(),
             splitType: KB_SplitType.HORIZONTAL,
             tree: this
@@ -173,12 +194,13 @@ var KB_Tree = function(options) {
 
     Object.assign(this, {
         pagesize:  () => this._pagesize,
-        count:     () => this._count
+        count:     () => this._count,
+        root:      () => this._root
     });
 
     this.insert = function(point) {
         this._count++;
-        this.root.insert(point);
+        this.root().insert(point);
     };
 
     this._ensurePagesizeIsValid = () => {
@@ -190,10 +212,6 @@ var KB_Tree = function(options) {
         }
     };
 
-    this.print = function() {
-        return this.root.print().join('\n');
-    };
-
     return this.init();
 };
 
@@ -203,6 +221,7 @@ module.exports = {
     Page: KB_Page,
     PageType: KB_PageType,
     SplitType: KB_SplitType,
-    Exceptions: KB_Exceptions
+    Exceptions: KB_Exceptions,
+    Printer: KB_Printer
 };
 
