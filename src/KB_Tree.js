@@ -37,7 +37,7 @@ var KB_Tree = function(options) {
 
 KB_Tree.Page = function(options) {
     this._pageType = KB_Tree.PageType.PointsPage;
-    this.splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
+    this._splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
     this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
     this.parent = (options && options.parent) ? options.parent : null;
     this.tree = (options && options.tree) ? options.tree : null;
@@ -45,6 +45,8 @@ KB_Tree.Page = function(options) {
     this.boundaries = null;
 
     this.pagesize = () => this._pagesize;
+
+    this.splitType = () => this._splitType;
 
     this.pageType = () => this._pageType;
 
@@ -127,7 +129,7 @@ KB_Tree.Page = function(options) {
     };
 
     this.printPageType = () => ((this.pageType() == KB_Tree.PageType.PointsPage) ? 'POINTS' : 'REGION' );
-    this.printSplitType = () => ((this.pageType == KB_Tree.PageType.PointsPage) ? '' : (' - split: ' + this.splitType))
+    this.printSplitType = () => (' - split: ' + this.splitType());
     this.printBoundaries = () => {
         return ' - boundaries: ['
             + this.boundaries.x[0] + ', '

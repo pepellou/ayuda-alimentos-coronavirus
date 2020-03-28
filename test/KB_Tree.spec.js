@@ -71,7 +71,7 @@ describe('KB_Tree', function() {
             });
 
             it('should have split type HORIZONTAL', function() {
-                expect(theTree.root.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+                expect(theTree.root.splitType()).to.be(KB_Tree.SplitType.HORIZONTAL);
             });
 
             it('should be linked to the tree', function() {
@@ -249,16 +249,16 @@ describe('KB_Tree.Page', function() {
             });
 
             it('should keep switching split pageType', function() {
-                expect(thePage.splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+                expect(thePage.splitType()).to.be(KB_Tree.SplitType.HORIZONTAL);
 
                 thePage.insert({ x: 9, y: 9 });
 
-                expect(thePage.children[0].splitType).to.be(KB_Tree.SplitType.VERTICAL);
+                expect(thePage.children[0].splitType()).to.be(KB_Tree.SplitType.VERTICAL);
 
                 thePage.insert({ x: 11, y: 10 });
                 thePage.insert({ x: 6, y: 14 });
 
-                expect(thePage.children[0].children[0].splitType).to.be(KB_Tree.SplitType.HORIZONTAL);
+                expect(thePage.children[1].children[0].splitType()).to.be(KB_Tree.SplitType.HORIZONTAL);
             });
 
             it('should properly update its boundaries and its children\'s boundaries', function() {
