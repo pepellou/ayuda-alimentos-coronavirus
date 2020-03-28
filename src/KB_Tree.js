@@ -43,12 +43,17 @@ KB_Tree.Page = function(options) {
     this.tree = (options && options.tree) ? options.tree : null;
     this.children = [];
     this.boundaries = null;
+    this._count = 0;
 
     this.pagesize = () => this._pagesize;
 
     this.splitType = () => this._splitType;
 
     this.pageType = () => this._pageType;
+
+    this.count = function() {
+        return this._count;
+    };
 
     this.convertToRegion = function() {
         this._pageType = KB_Tree.PageType.RegionPage;
