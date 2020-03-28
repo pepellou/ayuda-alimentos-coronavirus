@@ -168,7 +168,7 @@ describe('KB.Page', function() {
 
     });
 
-    describe('#wouldChangeLowerBoundary()', function() {
+    describe('#_wouldChangeLowerBoundary()', function() {
 
         describe('when splitType = HORIZONTAL', function() {
 
@@ -181,18 +181,18 @@ describe('KB.Page', function() {
             });
 
             it('should return true if point.x < boundary minimum x', function() {
-                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
-                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: 5  })).to.be(true);
-                expect(thePage.wouldChangeLowerBoundary({ x: -4 , y: 5  })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: -1 , y: 5  })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: -4 , y: 5  })).to.be(true);
             });
 
             it('should return false if point.x >= boundary minimum x', function() {
-                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: 5  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: -1 })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 0  , y: 11 })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 10 , y: 5  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 15 , y: 5  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 0  , y: 5  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 0  , y: -1 })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 0  , y: 11 })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 10 , y: 5  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 15 , y: 5  })).to.be(false);
             });
 
         });
@@ -208,18 +208,18 @@ describe('KB.Page', function() {
             });
 
             it('should return true if point.y < boundary minimum y', function() {
-                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: -1 })).to.be(true);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: -4 })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: -1 , y: -1 })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: -1 })).to.be(true);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: -4 })).to.be(true);
             });
 
             it('should return false if point.y >= boundary minimum y', function() {
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 0  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: -1 , y: 0  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 11 , y: 0  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 10 })).to.be(false);
-                expect(thePage.wouldChangeLowerBoundary({ x: 5  , y: 15 })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: 0  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: -1 , y: 0  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 11 , y: 0  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: 5  })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: 10 })).to.be(false);
+                expect(thePage._wouldChangeLowerBoundary({ x: 5  , y: 15 })).to.be(false);
             });
 
         });

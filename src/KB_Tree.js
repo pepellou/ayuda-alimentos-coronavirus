@@ -95,17 +95,11 @@ var KB_Page = function(options) {
 
         this.insert = function(point) {
             this._count++;
-            let index_to_insert = 0;
-            for (var i = 0; i < this.children.length; i++) {
-                if (!this.children[i].wouldChangeLowerBoundary(point)) {
-                    index_to_insert = i;
-                }
-            }
             // TODO maybe we need to rebalance the tree when 1st child starts overlapping with 2nd and so
+            let index_to_insert = this._findLastChildThatWouldntChangeLowerBoundary(point);
             this.children[index_to_insert].insert(point);
             this._updateBoundaries(point);
         };
-
     };
 
     this.insert = function(point) {
@@ -146,7 +140,17 @@ var KB_Page = function(options) {
         }
     };
 
-    this.wouldChangeLowerBoundary = function(point) {
+    this._findLastChildThatWouldntChangeLowerBoundary = function(point) {
+        let index_to_insert = 0;
+        for (var i = 0; i < this.children.length; i++) {
+            if (!this.children[i]._wouldChangeLowerBoundary(point)) {
+                index_to_insert = i;
+            }
+        }
+        return index_to_insert;
+    };
+
+    this._wouldChangeLowerBoundary = function(point) {
         return (this.splitType() == KB_SplitType.VERTICAL)
             ? point.y < this.boundaries.y[0]
             : point.x < this.boundaries.x[0];
@@ -154,7 +158,6 @@ var KB_Page = function(options) {
 
     this.splitAndAdd = function(point) {
         let newChildren = [];
-        let index_to_insert = 0;
         for (var i = 0; i < this.pagesize() / 2; i++) {
             var theChildPage = new KB_Page({
                 pagesize: this.pagesize(),
@@ -165,13 +168,12 @@ var KB_Page = function(options) {
             theChildPage.insert(this.children[2 * i]);
             theChildPage.insert(this.children[2 * i + 1]);
             newChildren.push(theChildPage);
-            if (!theChildPage.wouldChangeLowerBoundary(point)) {
-                index_to_insert = i;
-            }
         }
-        newChildren[index_to_insert].insert(point);
 
         this.children = newChildren;
+
+        index_to_insert = this._findLastChildThatWouldntChangeLowerBoundary(point);
+        this.children[index_to_insert].insert(point);
     };
 
     return this.init();
