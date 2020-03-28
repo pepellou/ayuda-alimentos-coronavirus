@@ -184,7 +184,7 @@ describe('KB_Tree.Page', function() {
                     expect(
                         thePage.children[0].children.length +
                         thePage.children[1].children.length
-                    ).to.be(thePage._pagesize + 1);
+                    ).to.be(thePage.pagesize() + 1);
                 });
 
                 it('should be linked to the parent page', function() {

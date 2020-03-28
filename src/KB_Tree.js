@@ -1,11 +1,11 @@
 var KB_Tree = function(options) {
 
     this._count = 0;
-    this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
+    this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
 
     this.init = function() {
         this.root = new KB_Tree.Page({
-            pagesize: this._pagesize,
+            pagesize: this.pagesize(),
             splitType: KB_Tree.SplitType.HORIZONTAL,
             tree: this
         });
@@ -14,6 +14,8 @@ var KB_Tree = function(options) {
     this.count = function() {
         return this._count;
     };
+
+    this.pagesize = () => this._pagesize;
 
     this.insert = function(point) {
         this._count++;
@@ -66,7 +68,7 @@ KB_Tree.Page = function(options) {
     };
 
     this.insert = function(point) {
-        if (this.children.length == this._pagesize) {
+        if (this.children.length == this.pagesize()) {
             this.splitAndAdd(point);
             this.convertToRegion();
         } else {
@@ -126,7 +128,7 @@ KB_Tree.Page = function(options) {
 
     this.print = function() {
         return [
-            '[' + this.printPageType() + ' (max: ' + this._pagesize + ')]' + this.printBoundaries() + this.printSplitType(),
+            '[' + this.printPageType() + ' (max: ' + this.pagesize() + ')]' + this.printBoundaries() + this.printSplitType(),
             '|',
             '+----{ ' + this.children.map(p => '(' + p.x + ', ' + p.y + ')').join(', ') + ' }'
         ];
