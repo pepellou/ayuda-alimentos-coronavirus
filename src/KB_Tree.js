@@ -1,15 +1,11 @@
 var KB_Tree = function(options) {
 
-    this._count = 0;
-    this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
-
     this.init = function() {
-        if (this.pagesize() < 4) {
-            throw KB_Tree.Exceptions.SmallPageSizeNotAllowedException;
-        }
-        if (this.pagesize() % 2 == 1) {
-            throw KB_Tree.Exceptions.OddPageSizeNotAllowedException;
-        }
+        this._count = 0;
+        this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
+
+        this._ensurePagesizeIsValid();
+
         this.root = new KB_Tree.Page({
             pagesize: this.pagesize(),
             splitType: KB_Tree.SplitType.HORIZONTAL,
@@ -17,15 +13,23 @@ var KB_Tree = function(options) {
         });
     };
 
-    this.count = function() {
-        return this._count;
-    };
-
-    this.pagesize = () => this._pagesize;
+    Object.assign(this, {
+        pagesize:  () => this._pagesize,
+        count:     () => this._count
+    });
 
     this.insert = function(point) {
         this._count++;
         this.root.insert(point);
+    };
+
+    this._ensurePagesizeIsValid = () => {
+        if (this.pagesize() < 4) {
+            throw KB_Tree.Exceptions.SmallPageSizeNotAllowedException;
+        }
+        if (this.pagesize() % 2 == 1) {
+            throw KB_Tree.Exceptions.OddPageSizeNotAllowedException;
+        }
     };
 
     this.print = function() {
@@ -36,24 +40,26 @@ var KB_Tree = function(options) {
 };
 
 KB_Tree.Page = function(options) {
-    this._pageType = KB_Tree.PageType.PointsPage;
-    this._splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
-    this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
-    this.parent = (options && options.parent) ? options.parent : null;
-    this.tree = (options && options.tree) ? options.tree : null;
-    this.children = [];
-    this.boundaries = null;
-    this._count = 0;
 
-    this.pagesize = () => this._pagesize;
-
-    this.splitType = () => this._splitType;
-
-    this.pageType = () => this._pageType;
-
-    this.count = function() {
-        return this._count;
+    this.init = function() {
+        this._pageType = KB_Tree.PageType.PointsPage;
+        this._splitType = (options && options.splitType) ? options.splitType : KB_Tree.SplitType.HORIZONTAL;
+        this._pagesize = (options && options.pagesize) ? options.pagesize : 2;
+        this._parent = (options && options.parent) ? options.parent : null;
+        this._count = 0;
+        this._tree = (options && options.tree) ? options.tree : null;
+        this.children = [];
+        this.boundaries = null;
     };
+
+    Object.assign(this, {
+        pagesize:  () => this._pagesize,
+        splitType: () => this._splitType,
+        pageType:  () => this._pageType,
+        parent:    () => this._parent,
+        count:     () => this._count,
+        tree:      () => this._tree
+    });
 
     this.convertToRegion = function() {
         this._pageType = KB_Tree.PageType.RegionPage;
@@ -138,7 +144,7 @@ KB_Tree.Page = function(options) {
                 pagesize: this.pagesize(),
                 splitType: KB_Tree.SplitType.next(this.splitType()),
                 parent: this,
-                tree: this.tree
+                tree: this.tree()
             });
             theChildPage.insert(this.children[2 * i]);
             theChildPage.insert(this.children[2 * i + 1]);
@@ -170,7 +176,7 @@ KB_Tree.Page = function(options) {
         ];
     };
 
-    return this;
+    return this.init();
 };
 
 KB_Tree.PageType = {

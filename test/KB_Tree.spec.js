@@ -75,7 +75,7 @@ describe('KB_Tree', function() {
             });
 
             it('should be linked to the tree', function() {
-                expect(theTree.root.tree).to.be(theTree);
+                expect(theTree.root.tree()).to.be(theTree);
             });
 
             let theTree;
@@ -332,13 +332,13 @@ describe('KB_Tree.Page', function() {
                 });
 
                 it('should be linked to the parent page', function() {
-                    expect(thePage.children[0].parent).to.be(thePage);
-                    expect(thePage.children[1].parent).to.be(thePage);
+                    expect(thePage.children[0].parent()).to.be(thePage);
+                    expect(thePage.children[1].parent()).to.be(thePage);
                 });
 
                 it('should be linked to the tree', function() {
-                    expect(thePage.children[0].tree).to.be(theTree);
-                    expect(thePage.children[1].tree).to.be(theTree);
+                    expect(thePage.children[0].tree()).to.be(theTree);
+                    expect(thePage.children[1].tree()).to.be(theTree);
                 });
 
                 beforeEach(function() {
