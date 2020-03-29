@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/pepellou/ayuda-alimentos-coronavirus#readme",
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "sinon": "^9.0.1"
   },
   "dependencies": {
     "expect.js": "^0.3.1"

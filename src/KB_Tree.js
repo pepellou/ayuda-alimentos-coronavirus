@@ -14,7 +14,8 @@ var KB_SplitType = {
 var KB_Exceptions = {
     SmallPageSizeNotAllowedException: new Error('Cannot create tree with a pagesize less than 4'),
     OddPageSizeNotAllowedException: new Error('Cannot create tree with an odd pagesize - only even pagesizes are allowed'),
-    MissingPropertyException: new Error('The object does not contain both "x" and "y" properties')
+    MissingPropertyException: new Error('The object does not contain both "x" and "y" properties'),
+    MissingImplementationException: new Error('Implementation is missing for storage')
 };
 
 var KB_Printer = function(tree) {
@@ -242,6 +243,50 @@ var KB_Tree = function(options) {
     return this.init();
 };
 
+var KB_Storage = function(implementation) {
+
+    if (implementation == undefined) {
+        throw KB_Exceptions.MissingImplementationException;
+    }
+
+    Object.assign(this, {
+        add: implementation.add,
+        get: implementation.get,
+        set: implementation.set
+    });
+
+    return this;
+};
+
+KB_Storage.ArrayStorage = function() {
+
+    this.init = function() {
+        this._pages = [];
+
+        Object.assign(this, {
+            count: () => this._pages.length
+        });
+    };
+
+    this.add = function(page) {
+        this._pages.push(page);
+        return this.count() - 1;
+    };
+
+    this.get = function(id) {
+        return this._pages[id];
+    };
+
+    this.set = function(id, page) {
+        this._pages[id] = page;
+    };
+
+    return this.init();
+};
+
+KB_Storage.FirebaseStorage = function() {
+};
+
 
 module.exports = {
     Tree: KB_Tree,
@@ -249,6 +294,7 @@ module.exports = {
     PageType: KB_PageType,
     SplitType: KB_SplitType,
     Exceptions: KB_Exceptions,
-    Printer: KB_Printer
+    Printer: KB_Printer,
+    Storage: KB_Storage
 };
 

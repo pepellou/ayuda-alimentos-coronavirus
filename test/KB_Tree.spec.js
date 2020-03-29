@@ -1,4 +1,6 @@
 var expect = require('expect.js');
+var sinon = require('sinon');
+
 var KB = require('../src/KB_Tree.js');
 var Tree = KB.Tree;
 var Page = KB.Page;
@@ -536,5 +538,142 @@ describe('KB.Printer', function() {
         });
 
     });
+
+});
+
+describe('KB.Storage', function() {
+
+    let theStorage;
+    let theStorageImplementation;
+
+    beforeEach(function() {
+        theStorageImplementation = new KB.Storage.ArrayStorage();
+        sinon.replace(theStorageImplementation, 'add', sinon.fake());
+        sinon.replace(theStorageImplementation, 'get', sinon.fake());
+        sinon.replace(theStorageImplementation, 'set', sinon.fake());
+
+        theStorage = new KB.Storage(theStorageImplementation);
+    });
+
+    afterEach(function() {
+        sinon.restore();
+    });
+
+    describe('#construct()', function() {
+
+        it('should throw an exception if no storage implementation is given', function() {
+            expectThisToThrow(() => {
+                theStorage = new KB.Storage();
+            }, KB.Exceptions.MissingImplementationException);
+        });
+
+    });
+
+    describe('#add()', function() {
+
+        it('should call the implementation add()', function() {
+            var aPage = new KB.Page();
+
+            theStorage.add(aPage);
+
+            expect(theStorageImplementation.add.calledWith(aPage)).to.be(true);
+        });
+
+    });
+
+    describe('#get()', function() {
+
+        it('should call the implementation get()', function() {
+            theStorage.get(42);
+
+            expect(theStorageImplementation.get.calledWith(42)).to.be(true);
+        });
+
+    });
+
+    describe('#set()', function() {
+
+        it('should call the implementation set()', function() {
+            var aPage = new KB.Page();
+
+            theStorage.set(42, aPage);
+
+            expect(theStorageImplementation.set.calledWith(42, aPage)).to.be(true);
+        });
+
+    });
+
+});
+
+describe('KB.Storage.ArrayStorage', function() {
+
+    let theStorage;
+
+    beforeEach(function() {
+        theStorage = new KB.Storage.ArrayStorage();
+    });
+
+    describe('#add()', function() {
+
+        it('should store a page', function() {
+            var aPage = new KB.Page();
+
+            expect(theStorage.count()).to.be(0);
+
+            theStorage.add(aPage);
+
+            expect(theStorage.count()).to.be(1);
+        });
+
+        it('should return a unique id of the added element', function() {
+            var aPage = new KB.Page();
+            var anotherPage = new KB.Page();
+
+            var the1stId = theStorage.add(aPage);
+            var the2ndId = theStorage.add(anotherPage);
+
+            expect(theStorage.count()).to.be(2);
+            expect(the1stId).not.to.be(the2ndId);
+        });
+
+    });
+
+    describe('#get()', function() {
+
+        it('should return the element corresponding to the given id', function() {
+            var aPage = new KB.Page();
+            var anotherPage = new KB.Page();
+
+            var the1stId = theStorage.add(aPage);
+            var the2ndId = theStorage.add(anotherPage);
+
+            expect(aPage).to.be(theStorage.get(the1stId));
+            expect(anotherPage).to.be(theStorage.get(the2ndId));
+        });
+
+    });
+
+    describe('#set()', function() {
+
+        it('should update the element corresponding to the given id with the given object', function() {
+            var aPage = new KB.Page();
+            var anotherPage = new KB.Page();
+
+            expect(aPage).not.to.be(anotherPage);
+
+            var theId = theStorage.add(aPage);
+
+            expect(theStorage.count()).to.be(1);
+            expect(aPage).to.be(theStorage.get(theId));
+
+            theStorage.set(theId, anotherPage);
+
+            expect(theStorage.count()).to.be(1);
+            expect(anotherPage).to.be(theStorage.get(theId));
+        });
+
+    });
+
+    // TODO delete page from storage??
 
 });
