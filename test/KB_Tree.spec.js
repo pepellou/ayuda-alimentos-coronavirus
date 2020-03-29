@@ -5,18 +5,18 @@ var Page = KB.Page;
 
 const PAGE_SIZE = 6;
 
+let expectThisToThrow = (code, exception) => {
+    try {
+        code();
+        throw 'This should not happen';
+    } catch(e) {
+        expect(e).to.be(exception);
+    }
+};
+
 describe('KB.Tree', function() {
 
     describe('#__construct()', function() {
-
-        let expectThisToThrow = (code, exception) => {
-            try {
-                code();
-                throw 'This should not happen';
-            } catch(e) {
-                expect(e).to.be(exception);
-            }
-        };
 
         it('should not contain any points', function() {
             var theTree = new KB.Tree({ pagesize: PAGE_SIZE });
@@ -84,6 +84,47 @@ describe('KB.Tree', function() {
 
             beforeEach(function() {
                 theTree = new KB.Tree({ pagesize: PAGE_SIZE });
+            });
+
+        });
+
+        describe('should accept the redefinition of "x" and/or "y"', function() {
+
+            it('throws exception when inserting an object with no "x" or no "y"', function() {
+                var theTree = new KB.Tree();
+
+                expectThisToThrow(() => {
+                    theTree.insert({ lat: 10, lon: 10 });
+                }, KB.Exceptions.MissingPropertyException);
+
+                expectThisToThrow(() => {
+                    theTree.insert({ x: 10, lon: 10 });
+                }, KB.Exceptions.MissingPropertyException);
+
+                expectThisToThrow(() => {
+                    theTree.insert({ lat: 10, y: 10 });
+                }, KB.Exceptions.MissingPropertyException);
+            });
+
+            it('allows redefinition of both', function() {
+                var theTree = new KB.Tree({
+                    pagesize: PAGE_SIZE,
+                    x: (obj) => obj.lat,
+                    y: (obj) => obj.lon
+                });
+
+                theTree.insert({ lat: 10, lon: 10 });
+            });
+
+            it('allows redefinition of one of them', function() {
+                var theTree = new KB.Tree({
+                    pagesize: PAGE_SIZE,
+                    y: (obj) => obj.lon
+                });
+
+                theTree.insert({ aProperty: -1, x: 10, lon: 10 });
+
+                expect(theTree.root().count()).to.be(1);
             });
 
         });

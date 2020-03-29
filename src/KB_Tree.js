@@ -13,7 +13,8 @@ var KB_SplitType = {
 
 var KB_Exceptions = {
     SmallPageSizeNotAllowedException: new Error('Cannot create tree with a pagesize less than 4'),
-    OddPageSizeNotAllowedException: new Error('Cannot create tree with an odd pagesize - only even pagesizes are allowed')
+    OddPageSizeNotAllowedException: new Error('Cannot create tree with an odd pagesize - only even pagesizes are allowed'),
+    MissingPropertyException: new Error('The object does not contain both "x" and "y" properties')
 };
 
 var KB_Printer = function(tree) {
@@ -32,7 +33,7 @@ var KB_Printer = function(tree) {
         return [
             this._printHeadline(page),
             '|',
-            '+----{ ' + page.children.map(p => '(' + p.x + ', ' + p.y + ')').join(', ') + ' }'
+            '+----{ ' + page.children.map(p => '(' + page.x(p) + ', ' + page.y(p) + ')').join(', ') + ' }'
         ];
     };
 
@@ -77,83 +78,38 @@ var KB_Page = function(options) {
         this._parent = (options && options.parent) ? options.parent : null;
         this._count = 0;
         this._tree = (options && options.tree) ? options.tree : null;
+        this._x = (options && options.x) ? options.x : ((p) => (p.x));
+        this._y = (options && options.y) ? options.y : ((p) => (p.y));
         this.children = [];
         this.boundaries = null;
-    };
 
-    Object.assign(this, {
-        pagesize:  () => this._pagesize,
-        splitType: () => this._splitType,
-        pageType:  () => this._pageType,
-        parent:    () => this._parent,
-        count:     () => this._count,
-        tree:      () => this._tree
-    });
-
-    this.convertToRegion = function() {
-        this._pageType = KB_PageType.RegionPage;
-
-        this.insert = function(point) {
-            this._count++;
-            // TODO maybe we need to rebalance the tree when 1st child starts overlapping with 2nd and so
-            let index_to_insert = this._findLastChildThatWouldntChangeLowerBoundary(point);
-            this.children[index_to_insert].insert(point);
-            this._updateBoundaries(point);
-        };
+        Object.assign(this, {
+            pagesize:  () => this._pagesize,
+            splitType: () => this._splitType,
+            pageType:  () => this._pageType,
+            parent:    () => this._parent,
+            count:     () => this._count,
+            tree:      () => this._tree,
+            x:         this._x,
+            y:         this._y
+        });
     };
 
     this.insert = function(point) {
+        this._ensurePointIsValid(point);
         this._count++;
         if (this.children.length == this.pagesize()) {
             this.splitAndAdd(point);
-            this.convertToRegion();
+            this._convertToRegion();
         } else {
             this.children.push(point);
             this.children.sort(
                 (this.splitType() == KB_SplitType.HORIZONTAL)
-                ? (p1, p2) => p1.y - p2.y
-                : (p1, p2) => p1.x - p2.x
+                ? (p1, p2) => this.y(p1) - this.y(p2)
+                : (p1, p2) => this.x(p1) - this.x(p2)
             );
         }
         this._updateBoundaries(point);
-    };
-
-    this._updateBoundaries = function(point) {
-        if (this.boundaries == null) {
-            this.boundaries = {
-                x: [ point.x, point.x ],
-                y: [ point.y, point.y ]
-            };
-        } else {
-            if (point.x < this.boundaries.x[0]) {
-                this.boundaries.x[0] = point.x;
-            }
-            if (point.x > this.boundaries.x[1]) {
-                this.boundaries.x[1] = point.x;
-            }
-            if (point.y < this.boundaries.y[0]) {
-                this.boundaries.y[0] = point.y;
-            }
-            if (point.y > this.boundaries.y[1]) {
-                this.boundaries.y[1] = point.y;
-            }
-        }
-    };
-
-    this._findLastChildThatWouldntChangeLowerBoundary = function(point) {
-        let index_to_insert = 0;
-        for (var i = 0; i < this.children.length; i++) {
-            if (!this.children[i]._wouldChangeLowerBoundary(point)) {
-                index_to_insert = i;
-            }
-        }
-        return index_to_insert;
-    };
-
-    this._wouldChangeLowerBoundary = function(point) {
-        return (this.splitType() == KB_SplitType.VERTICAL)
-            ? point.y < this.boundaries.y[0]
-            : point.x < this.boundaries.x[0];
     };
 
     this.splitAndAdd = function(point) {
@@ -176,6 +132,71 @@ var KB_Page = function(options) {
         this.children[index_to_insert].insert(point);
     };
 
+    this._convertToRegion = function() {
+        this._pageType = KB_PageType.RegionPage;
+
+        this.insert = function(point) {
+            this._count++;
+            // TODO maybe we need to rebalance the tree when 1st child starts overlapping with 2nd and so
+            let index_to_insert = this._findLastChildThatWouldntChangeLowerBoundary(point);
+            this.children[index_to_insert].insert(point);
+            this._updateBoundaries(point);
+        };
+    };
+
+    this._updateBoundaries = function(point) {
+        if (this.boundaries == null) {
+            this.boundaries = {
+                x: [ this.x(point), this.x(point) ],
+                y: [ this.y(point), this.y(point) ]
+            };
+        } else {
+            if (this.x(point) < this.boundaries.x[0]) {
+                this.boundaries.x[0] = this.x(point);
+            }
+            if (this.x(point) > this.boundaries.x[1]) {
+                this.boundaries.x[1] = this.x(point);
+            }
+            if (this.y(point) < this.boundaries.y[0]) {
+                this.boundaries.y[0] = this.y(point);
+            }
+            if (this.y(point) > this.boundaries.y[1]) {
+                this.boundaries.y[1] = this.y(point);
+            }
+        }
+    };
+
+    this._findLastChildThatWouldntChangeLowerBoundary = function(point) {
+        let index_to_insert = 0;
+        for (var i = 0; i < this.children.length; i++) {
+            if (!this.children[i]._wouldChangeLowerBoundary(point)) {
+                index_to_insert = i;
+            }
+        }
+        return index_to_insert;
+    };
+
+    this._wouldChangeLowerBoundary = function(point) {
+        return (this.splitType() == KB_SplitType.VERTICAL)
+            ? this.y(point) < this.boundaries.y[0]
+            : this.x(point) < this.boundaries.x[0];
+    };
+
+    this._ensurePagesizeIsValid = () => {
+        if (this.pagesize() < 4) {
+            throw KB_Exceptions.SmallPageSizeNotAllowedException;
+        }
+        if (this.pagesize() % 2 == 1) {
+            throw KB_Exceptions.OddPageSizeNotAllowedException;
+        }
+    };
+
+    this._ensurePointIsValid = (point) => {
+        if (this.x(point) == undefined || this.y(point) == undefined) {
+            throw KB_Exceptions.MissingPropertyException;
+        }
+    };
+
     return this.init();
 };
 
@@ -184,21 +205,25 @@ var KB_Tree = function(options) {
     this.init = function() {
         this._count = 0;
         this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
+        this._x = (options && options.x) ? options.x : (p) => p.x;
+        this._y = (options && options.y) ? options.y : (p) => p.y;
+
+        Object.assign(this, {
+            pagesize:  () => this._pagesize,
+            count:     () => this._count,
+            root:      () => this._root
+        });
 
         this._ensurePagesizeIsValid();
 
         this._root = new KB_Page({
             pagesize: this.pagesize(),
             splitType: KB_SplitType.HORIZONTAL,
-            tree: this
+            tree: this,
+            x: this._x,
+            y: this._y
         });
     };
-
-    Object.assign(this, {
-        pagesize:  () => this._pagesize,
-        count:     () => this._count,
-        root:      () => this._root
-    });
 
     this.insert = function(point) {
         this._count++;
