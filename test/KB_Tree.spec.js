@@ -32,6 +32,21 @@ describe('KB.Tree', function() {
             expect(theTree.pagesize()).to.be(4);
         });
 
+        it('should have a default array storage implementation', function() {
+            var theTree = new KB.Tree();
+
+            expect(theTree.storage()).to.be.a(KB.Storage);
+            expect(theTree.storage().implementation()).to.be.a(KB.Storage.ArrayStorage);
+        });
+
+        it('should allow to set a storage implementation', function() {
+            var aStorageImplementation = new KB.Storage.ArrayStorage();
+            var theTree = new KB.Tree({ storage: aStorageImplementation });
+
+            expect(theTree.storage()).to.be.a(KB.Storage);
+            expect(theTree.storage().implementation()).to.be(aStorageImplementation);
+        });
+
         it('should not allow a pagesize < 4', function() {
             expectThisToThrow(() => {
                 new KB.Tree({ pagesize: 1 });

@@ -208,11 +208,15 @@ var KB_Tree = function(options) {
         this._pagesize = (options && options.pagesize) ? options.pagesize : 4;
         this._x = (options && options.x) ? options.x : (p) => p.x;
         this._y = (options && options.y) ? options.y : (p) => p.y;
+        this._storage = (options && options.storage)
+            ? new KB_Storage(options.storage)
+            : new KB_Storage(new KB_Storage.ArrayStorage());
 
         Object.assign(this, {
             pagesize:  () => this._pagesize,
             count:     () => this._count,
-            root:      () => this._root
+            root:      () => this._root,
+            storage:   () => this._storage
         });
 
         this._ensurePagesizeIsValid();
@@ -252,7 +256,8 @@ var KB_Storage = function(implementation) {
     Object.assign(this, {
         add: implementation.add,
         get: implementation.get,
-        set: implementation.set
+        set: implementation.set,
+        implementation: () => implementation
     });
 
     return this;
