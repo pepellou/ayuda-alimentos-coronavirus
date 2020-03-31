@@ -460,6 +460,33 @@ describe('KB.Page', function() {
 
     });
 
+    describe('use of external storage', function() {
+
+        describe('_planes', function() {
+
+            it('should store the indexes of the corresponding children lower boundaries', function() {
+                theTree = new KB.Tree({ pagesize: 4 });
+
+                theTree.insert({ x: 3, y: 6 });
+                theTree.insert({ x: 2, y: 7 });
+                theTree.insert({ x: 17, y: 15 });
+                theTree.insert({ x: 6, y: 12 });
+                theTree.insert({ x: 13, y: 14 });
+                theTree.insert({ x: 9, y: 1 });
+                theTree.insert({ x: 10, y: 19 });
+                theTree.insert({ x: 16, y: 8 });
+                theTree.insert({ x: 10, y: 10 });
+
+                var printer = new KB.Printer(theTree);
+
+                expect(theTree.root()._planes).to.eql([1, 12]);
+                expect(theTree.root().children[0]._planes).to.eql([2, 9]);
+            });
+
+        });
+
+    });
+
 });
 
 describe('KB.Printer', function() {

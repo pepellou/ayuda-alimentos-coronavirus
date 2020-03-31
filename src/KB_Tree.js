@@ -83,6 +83,7 @@ var KB_Page = function(options) {
         this._y = (options && options.y) ? options.y : ((p) => (p.y));
         this.children = [];
         this.boundaries = null;
+        this._planes = [];
 
         Object.assign(this, {
             pagesize:  () => this._pagesize,
@@ -125,6 +126,7 @@ var KB_Page = function(options) {
             theChildPage.insert(this.children[2 * i]);
             theChildPage.insert(this.children[2 * i + 1]);
             newChildren.push(theChildPage);
+            this._planes.push(theChildPage.boundaries.getLower());
         }
 
         this.children = newChildren;
@@ -149,7 +151,10 @@ var KB_Page = function(options) {
         if (this.boundaries == null) {
             this.boundaries = {
                 x: [ this.x(point), this.x(point) ],
-                y: [ this.y(point), this.y(point) ]
+                y: [ this.y(point), this.y(point) ],
+                getLower: (this.splitType() == KB_SplitType.VERTICAL)
+                    ? () => this.boundaries.y[0]
+                    : () => this.boundaries.x[0],
             };
         } else {
             if (this.x(point) < this.boundaries.x[0]) {
