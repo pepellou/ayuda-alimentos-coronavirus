@@ -1,7 +1,7 @@
 {
-  "name": "AyudaAlimentosCoronavirus",
+  "name": "AjudaComidaCoronavirus",
   "version": "1.0.0",
-  "description": "<h1 align=\"center\">sosvecinos.org</h1>",
+  "description": "<h1 align=\"center\">brasilcontracoronavirus.com.br</h1>",
   "main": "index.js",
   "directories": {
     "test": "test"
