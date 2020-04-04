@@ -25,3 +25,11 @@ body, #mapid {
     border-radius: 3px;
     box-shadow: 0px 0px 4px #666;
 }
+
+#map__buttons{
+    position: absolute;
+    z-index: 2;
+    top: 11px;
+    right: 65px;
+}
+

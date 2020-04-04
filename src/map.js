@@ -6,14 +6,18 @@ const icons = {
     iconSize: [25, 25],
     shadowUrl: 'img/icons/icon_shadow.png',
     shadowSize: [100, 35],
-    shadowAnchor: [53, 6]
+    shadowAnchor: [53, 6],
+    className: 'needHelp'
+
   }),
   volunteer: L.icon({
     iconUrl: "img/icons/icon_volunteer.svg",
     iconSize: [35, 35],
     shadowUrl: 'img/icons/icon_shadow.png',
     shadowSize: [100, 35],
-    shadowAnchor: [50, 5]
+    shadowAnchor: [50, 5],
+    className: 'volunteer'
+
   })
 };
 
@@ -112,5 +116,46 @@ $(function() {
         fill_map_with_all_tweets(map, snapshot.val());
     });
 
+});
+
+$(function () {
+    $('#filtro-oferta').on("click", function () {
+
+        var checked =$('#filtro-oferta').data( "checked" );
+    
+        if ($('#filtro-oferta').is(':checked')) {
+
+            $('#filtro-oferta').data( "checked", true );
+            checked = true;
+            $('#filtro-oferta').prop('checked', true);
+            $(".needHelp").show();
+
+        } else {
+            $('#filtro-oferta').data( "checked", false );
+            checked = false;
+            $('#filtro-oferta').prop('checked', false);
+            $(".needHelp").hide();
+        }
+
+    });
+    $('#filtro-demanda').on("click", function () {
+        var checked =$('#filtro-demanda').data( "checked");
+    
+        if ($('#filtro-demanda').is(':checked')) {
+
+            $('#filtro-demanda').data( "checked", true );
+            checked = true;
+            $('#filtro-demanda').prop('checked', true);
+            $(".volunteer").show();
+
+        } else {
+            $('#filtro-demanda').data( "checked", false );
+            checked = false;
+            $('#filtro-demanda').prop('checked', false);
+            $(".volunteer").hide();
+        }
+
+
+    });
 });
 
