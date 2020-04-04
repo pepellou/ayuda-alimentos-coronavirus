@@ -35,7 +35,7 @@ final class MessageTest extends TestCase
     {
         $theId   = $this->anyString();
         $theNick = $this->anyString();
-        $theText = $this->anyStringWithTags([ 'sampleTag', 'anotherTag', 'AyudaAlimentosCoronavirus' ]);
+        $theText = $this->anyStringWithTags([ 'sampleTag', 'anotherTag', 'AjudaComidaCoronavirus' ]);
 
         $message = Message::fromTweet($theId, $theNick, $theText);
 
@@ -56,8 +56,8 @@ final class MessageTest extends TestCase
     {
         $theId   = $this->anyString();
         $theNick = $this->anyString();
-        $theText = $this->anyStringWithTags([ 'sampleTag', 'anotherTag', 'AyudaAlimentosCoronavirus' ]);
-        $theTags = 'sampleTag,anotherTag,AyudaAlimentosCoronavirus';
+        $theText = $this->anyStringWithTags([ 'sampleTag', 'anotherTag', 'AjudaComidaCoronavirus' ]);
+        $theTags = 'sampleTag,anotherTag,AjudaComidaCoronavirus';
         $theUrl  = $this->anyString();
 
         $theMessage = new Message();

@@ -112,7 +112,7 @@ final class DatabaseTest extends TestCase
         return Message::fromTweet(
             'aSampleId',
             'aNickname',
-            'a sample #text with some #hashtags #AyudaAlimentosCoronavirus'
+            'a sample #text with some #hashtags #AjudaComidaCoronavirus'
         );
     }
 
