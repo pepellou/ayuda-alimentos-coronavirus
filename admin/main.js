@@ -31,7 +31,7 @@ $(function() {
                     + tweet.message
                     + '</td><td><a href="'
                     + link
-                    + '" target="_blank">Ver mensaje original</a></td>'
+                    + '" target="_blank">Ver mensagem original</a></td>'
                     + '<td><button data-action="edit" data-id="'
                     + id
                     + '">Editar</button> <button data-action="delete" data-id="'

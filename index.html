@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <title>sosvecinos.org</title>
+        <title>SOS Comida</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700|Work+Sans:300,400,700" rel="stylesheet">
-
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
-
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700|Work+Sans:300,400,700" rel="stylesheet" />
+        <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+        <link href="css/bootstrap.min.css" rel="stylesheet" />
+        <link href="css/style.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </head>
     <body>
         <header>
-            <a class="github-ribbon" target="_blank" href="https://github.com/pepellou/ayuda-alimentos-coronavirus"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
         </header>
-        <h1>sosvecinos.org</h1>
+
+        <h1>SOS Comida</h1>
+
         <p>
-            Recopilamos mensajes de ayuda y socorro en un mapa para que
-            puedas encontrar gente cercana que necesita tu ayuda o te puede ofrecer la suya.
-        </p>
-        <p>
-            O también puedes <a href="map.html">ver el mapa</a>.
-        </p>
-        <p>
-            Mira <a target="_blank" href="iniciativas.html">aquí</a> de dónde sacamos la información.
+            Coletamos mensagens de ajuda e ajuda em um mapa para que voc&ecirc; possa
+            encontrar pessoas pr&oacute;ximas que precisam de sua ajuda ou podem oferecer a deles.
         </p>
 
-        <label for="filterTags">Busca tu ciudad o barrio:</label>
-        <input type="text" class="form-control" id="filterTags" placeholder="Ciudad/barrio">
+        <p>
+            Ou voc&ecirc; tamb&eacute;m pode
+            <a href="http://brasilcontracoronavirus.com.br/sos/map.html">ver no mapa</a>.
+        </p>
+
+        <p>
+            &nbsp;Olhe&nbsp;<a href="http://brasilcontracoronavirus.com.br/sos/iniciativas.html" target="_blank">aqui </a>de
+            onde obtemos as informa&ccedil;&otilde;es.
+        </p>
+
+        <p>
+            <label for="filterTags">Encontre sua cidade ou bairro:</label>
+            <input class="form-control" id="filterTags" placeholder="Cidade/Estado/Bairro" type="text" />
+        </p>
 
         <table class="table" id="tweetsTable">
             <thead>
                 <tr>
-                    <th scope="col">Dónde</th>
-                    <th scope="col">Mensaje</th>
+                    <th scope="col">Onde</th>
+                    <th scope="col">Mensagem</th>
                 </tr>
             </thead>
             <tbody id="tweets">
             </tbody>
         </table>
-
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
         <script src="src/config.js"></script>

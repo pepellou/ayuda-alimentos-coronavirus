@@ -23,7 +23,7 @@ var fill_table_with_all_tweets = function(tweets) {
                 + tweet.message
                 + '<br><br> <a target="_blank" href="'
                 + link
-                + '"> Ver mensaje original </a> </td> </tr>'
+                + '"> Ver mensagem original </a> </td> </tr>'
         );
         $('a.' + tags_filter_class).on("click", function(e) {
             e.preventDefault();

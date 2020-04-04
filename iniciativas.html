@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <title>sosvecinos.org</title>
+        <title>SOS Comida</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700|Work+Sans:300,400,700" rel="stylesheet">
-
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
-
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700|Work+Sans:300,400,700" rel="stylesheet" />
+        <link href="css/bootstrap.min.css" rel="stylesheet" />
+        <link href="css/style.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </head>
     <body>
-        <h1>¿De dónde sacamos la información?</h1>
+        <h1>De onde obtemos as informa&ccedil;&otilde;es?</h1>
+
         <p>
-            Toda la información de esta web es recopilada de diferentes redes sociales
-            y está debidamente enlazada a las mismas.
-        </p>
-        <p>
-            Esta web simplemente visibiliza de una forma que creemos útil la información
-            que se genera a partir de diversas iniciativas solidarias:
+            Todas as informa&ccedil;&otilde;es contidas neste site s&atilde;o coletadas
+            de diferentes redes sociais e est&atilde;o devidamente vinculadas a elas.
         </p>
 
-        <table id="origins" class="table table-stripped">
+        <p>
+            Este site simplesmente torna vis&iacute;vel as informa&ccedil;&otilde;es geradas
+            por v&aacute;rias iniciativas de solidariedade de uma maneira que julgamos &uacute;til:
+        </p>
+
+        <table class="table table-stripped" id="origins">
             <thead class="thead-dark">
                 <tr>
-                    <th>Red social</th>
-                    <th>Cadena de búsqueda</th>
-                    <th>Mensajes recopilados</th>
+                    <th>Rede social</th>
+                    <th>Cadeia de pesquisa</th>
+                    <th>Mensagens coletadas</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>*</td>
-                    <td>(introducido manualmente)</td>
+                    <td>(inserido manualmente)</td>
                     <td>-</td>
                 </tr>
             </tbody>
         </table>
-
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
         <script src="src/config.js"></script>
         <script src="src/iniciativas.js"></script>
     </body>
 </html>
-
