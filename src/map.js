@@ -39,7 +39,7 @@ function TweetsMap() {
         self._map = L.map('mapid', {
             minZoom: 3,
             maxZoom: 13
-        }).setView([39.62,-4.25], 7);
+        }).setView([-15.62303683,-49.26269531], 5);
 
         self._circles = L.featureGroup();
 
