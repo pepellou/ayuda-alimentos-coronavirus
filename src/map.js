@@ -128,13 +128,14 @@ $(function () {
             $('#filtro-oferta').data( "checked", true );
             checked = true;
             $('#filtro-oferta').prop('checked', true);
-            $(".needHelp").show();
+            $(".volunteer").show();
 
         } else {
             $('#filtro-oferta').data( "checked", false );
             checked = false;
             $('#filtro-oferta').prop('checked', false);
-            $(".needHelp").hide();
+            $(".volunteer").hide();
+
         }
 
     });
@@ -146,13 +147,15 @@ $(function () {
             $('#filtro-demanda').data( "checked", true );
             checked = true;
             $('#filtro-demanda').prop('checked', true);
-            $(".volunteer").show();
+            $(".needHelp").show();
+
 
         } else {
             $('#filtro-demanda').data( "checked", false );
             checked = false;
             $('#filtro-demanda').prop('checked', false);
-            $(".volunteer").hide();
+            $(".needHelp").hide();
+
         }
 
 
