@@ -32,20 +32,6 @@ var fill_map_with_all_tweets = function(map, tweets) {
     }
 };
 
-var init_firebase = function() {
-    var firebaseConfig = {
-        apiKey: "AIzaSyCNCfCoMnJMx7ncX6An3zCQc4TWsK60300",
-        authDomain: "ayuda-alimentos-coronavirus.firebaseapp.com",
-        databaseURL: "https://ayuda-alimentos-coronavirus.firebaseio.com",
-        projectId: "ayuda-alimentos-coronavirus",
-        storageBucket: "ayuda-alimentos-coronavirus.appspot.com",
-        messagingSenderId: "622677547690",
-        appId: "1:622677547690:web:0a04757a7c6ab63dacced3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-};
-
 function TweetsMap() {
     var self = this;
 
@@ -108,7 +94,7 @@ function TweetsMap() {
 
 
 $(function() {
-    init_firebase();
+    firebase.initializeApp(firebaseConfig);
 
     var map = new TweetsMap();
 
@@ -119,10 +105,11 @@ $(function() {
 });
 
 $(function () {
+
     $('#filtro-oferta').on("click", function () {
 
         var checked =$('#filtro-oferta').data( "checked" );
-    
+
         if ($('#filtro-oferta').is(':checked')) {
 
             $('#filtro-oferta').data( "checked", true );
@@ -141,7 +128,7 @@ $(function () {
     });
     $('#filtro-demanda').on("click", function () {
         var checked =$('#filtro-demanda').data( "checked");
-    
+
         if ($('#filtro-demanda').is(':checked')) {
 
             $('#filtro-demanda').data( "checked", true );
@@ -157,7 +144,6 @@ $(function () {
             $(".needHelp").hide();
 
         }
-
 
     });
 });
