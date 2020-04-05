@@ -2,6 +2,10 @@ backend/config.php
 backend/vendor/
 backend/composer.lock
 backend/firebase-credentials.json
+
+src/config.js
+admin/config.js
+
 .phpunit.*.cache
 error_log
 php.ini

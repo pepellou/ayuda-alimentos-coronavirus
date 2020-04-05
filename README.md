@@ -28,14 +28,20 @@
 
 0) Clona este repositorio (deberías saber cómo :grimacing:)
 
-1) Crea el archivo de configuración copiando de config.php.ini:
+1) Crea los archivos de configuración `backend/config.php`, `backend/firebase-credentials.json`, `src/config.js` y `admin/config.js`
+copiando de los archivos `.ini` correspondientes:
 
 ```bash
     cd backend
     cp config.php.ini config.php
+    cp firebase-credentials.json.ini firebase-credentials.json
+    cd ../src
+    cp config.js.ini config.js
+    cd ../admin
+    cp config.js.ini config.js
 ```
 
-2) Edita dicho archivo de configuración config.php reemplazando todos los `FILL_ME` por los valores adecuados.
+2) Edita dichos archivos de configuración reemplazando todos los `FILL_ME` por los valores adecuados.
 
 (pídeme los datos [por DM en Twitter](https://twitter.com/messages/compose?recipient_id=133220267))
 
@@ -52,22 +58,20 @@
     php backend/run.php last
 ```
 
-5) Configura firebase copiando el archivo firebase-credentials.json.ini:
-
-```bash
-    cd backend
-    cp firebase-credentials.json.ini firebase-credentials.json
-```
-
-6) Edita el archivo firebase-credentials.json reemplazando todos los `FILL_ME` por los valores adecuados.
-
-(pídeme los datos [por DM en Twitter](https://twitter.com/messages/compose?recipient_id=133220267))
-
-7) Comprueba que puedes recolectar tweets:
+5) Comprueba que puedes recolectar tweets:
 
 ```bash
     php backend/run.php collect
 ```
+
+6) Comprueba que puedes ver la web en local:
+
+```bash
+    open index.html
+```
+
+(`open` es un comando de Mac, pero simplemente puedes abrir `index.html` en tu navegador favorito)
+
 
 ## Instalación local con Docker
 
@@ -75,7 +79,7 @@
 
 - docker 19+
 - docker-compose 1.25+
-- Configurar `backend/config.php` y `backend/firebase-credentials.json` como se especifica en la sección anterior
+- Configurar `backend/config.php`, `backend/firebase-credentials.json`, `src/config.js` y `admin/config.js` como se especifica en la sección anterior
 
 ### Comandos
 
