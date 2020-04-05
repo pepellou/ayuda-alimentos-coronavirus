@@ -49,9 +49,10 @@ class Database {
 
     private function createFirebase()
     {
+        $config = require __DIR__ . '/../../config.php';
         return (new Factory)
             ->withServiceAccount(ServiceAccount::fromJsonFile($this->credentials))
-            ->withDatabaseUri('https://ayuda-alimentos-coronavirus.firebaseio.com')
+            ->withDatabaseUri($config['firebase']['url'])
             ->create();
     }
 
