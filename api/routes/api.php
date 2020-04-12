@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Message;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,13 +21,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/message', function (Request $request) {
-    $owner = new stdclass();
-    $owner->name = "foo";
+    $messages = App\Message::all();
 
-    $team = new stdclass();
-    $team->owner = $owner;
+    $stats = new stdclass();
+    $stats->count = count($messages);
 
-    $obj = new stdclass();
-    $obj->team = $team;
-    return json_encode($obj);
+    $result = new stdclass();
+    $result->stats = $stats;
+    $result->results = $messages;
+
+    return json_encode($result);
 });
