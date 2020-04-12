@@ -12,10 +12,14 @@ class ExampleTest extends TestCase
      *
      * @return void
      */
-    public function testBasicTest()
+    public function test_()
     {
-        $response = $this->get('/');
+        $messages = factory(Message::class, 3)->create();
 
-        $response->assertStatus(200);
+        $response = $this->getJson('/api/message');
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('team.owner.name', 'foo');
     }
 }

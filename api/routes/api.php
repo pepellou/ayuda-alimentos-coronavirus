@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/message', function (Request $request) {
+    $owner = new stdclass();
+    $owner->name = "foo";
+
+    $team = new stdclass();
+    $team->owner = $owner;
+
+    $obj = new stdclass();
+    $obj->team = $team;
+    return json_encode($obj);
+});
