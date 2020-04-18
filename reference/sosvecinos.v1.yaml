@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: sosvecinos
+  version: '1.0'
+  contact:
+    name: Pepe
+    url: 'https://www.sosvecinos.org'
+    email: pepellou@gmail.com
+  description: 'Lista + mapa que muestra los tweets con el hashtag #AyudaAlimentosCoronavirus'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /messages:
+    get:
+      summary: Retrieves all the messages
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      example: "@raquelsastrecom Y yo diría que como pedir ayuda cuesta, también los voluntarios se ofrezcan con el mismo sistema. Dicho lo cual, ahí voy yo:\\n\\nVivo en #SantiagoDeCompostela #Milladoiro y estoy dispuesto a echar una mano a quien lo necesite por la zona  #AyudaAlimentosCoronavirus"
+                    nick:
+                      type: string
+                      example: pepellou
+                    url:
+                      type: string
+                      format: uri
+                      example: 'http://twitter.com/1230478612380746'
+                    gps:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                          format: double
+                          example: -8.51
+                          minimum: -90
+                          maximum: 90
+                        lon:
+                          type: number
+                          format: double
+                          example: 4.20834
+                          minimum: -180
+                          maximum: 180
+                    type:
+                      type: string
+                      enum:
+                        - volunteer
+                        - needHelp
+                      example: volunteer
+                    tags:
+                      type: array
+                      example:
+                        - Madrid
+                        - Legazpi
+                      items:
+                        type: string
+                    id:
+                      type: string
+                    searchTerms:
+                      type: string
+                      example: ofrezco ayuda compra
+              examples: {}
+      operationId: get-messages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      description: Retrieves all the messages
+components:
+  schemas: {}
+tags:
+  - name: ayuda
